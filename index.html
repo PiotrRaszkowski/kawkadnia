@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kawka Dnia — poranna dawka newsów</title>
+    <meta
+      name="description"
+      content="Kawka Dnia — czytelny, ciepły front PoC z porannym przeglądem najważniejszych wiadomości."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                cream: '#f8f2ea',
+                latte: '#efe3d3',
+                biscuit: '#dcc2a8',
+                mocha: '#8b5e3c',
+                espresso: '#4a3426'
+              },
+              accent: {
+                DEFAULT: '#c67c4e',
+                soft: '#f1d4bd'
+              },
+              surface: '#fffdf9',
+              ink: '#2d221b',
+              line: '#e7d8c8',
+              success: '#4b7a5a'
+            },
+            fontFamily: {
+              heading: ['Fraunces', 'serif'],
+              body: ['Inter', 'system-ui', 'sans-serif']
+            },
+            boxShadow: {
+              card: '0 18px 45px rgba(91, 61, 38, 0.08)',
+              soft: '0 10px 25px rgba(91, 61, 38, 0.10)'
+            },
+            borderRadius: {
+              panel: '1.5rem'
+            },
+            maxWidth: {
+              reading: '72ch'
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at top left, rgba(241, 212, 189, 0.45), transparent 28%),
+          linear-gradient(180deg, #fffaf4 0%, #f8f2ea 100%);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="font-body text-ink antialiased">
+    <div class="min-h-screen">
+      <header class="border-b border-line/80 bg-surface/90 backdrop-blur-sm">
+        <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          <a
+            href="#top"
+            class="inline-flex items-center gap-3 rounded-full border border-line bg-white/80 px-4 py-2 text-sm font-semibold text-ink shadow-soft transition hover:-translate-y-0.5 hover:border-brand-biscuit hover:text-brand-mocha focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            <span class="text-xl" aria-hidden="true">☕</span>
+            <span>Kawka Dnia</span>
+          </a>
+
+          <nav aria-label="Skróty sekcji" class="hidden items-center gap-2 md:flex">
+            <a href="#news-dnia" class="rounded-full px-4 py-2 text-sm font-medium text-brand-espresso transition hover:bg-brand-latte hover:text-brand-mocha focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">News dnia</a>
+            <a href="#polska" class="rounded-full px-4 py-2 text-sm font-medium text-brand-espresso transition hover:bg-brand-latte hover:text-brand-mocha focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Polska</a>
+            <a href="#swiat" class="rounded-full px-4 py-2 text-sm font-medium text-brand-espresso transition hover:bg-brand-latte hover:text-brand-mocha focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Świat</a>
+            <a href="#nauka" class="rounded-full px-4 py-2 text-sm font-medium text-brand-espresso transition hover:bg-brand-latte hover:text-brand-mocha focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Nauka</a>
+          </nav>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1.2fr)_360px] lg:px-8 lg:py-16">
+          <div class="space-y-8">
+            <div class="inline-flex items-center gap-2 rounded-full border border-brand-biscuit/70 bg-brand-latte/60 px-4 py-2 text-sm font-medium text-brand-espresso">
+              <span class="inline-flex h-2.5 w-2.5 rounded-full bg-accent"></span>
+              Poranna dawka wiadomości, bez informacyjnego chaosu
+            </div>
+
+            <div class="space-y-5">
+              <p class="text-sm font-semibold uppercase tracking-[0.3em] text-brand-mocha">Daily briefing</p>
+              <h1 class="max-w-reading font-heading text-4xl leading-tight text-brand-espresso sm:text-5xl lg:text-6xl">
+                Najważniejsze newsy do porannej kawy — ciepło podane, krótko opisane, łatwe do przeskanowania.
+              </h1>
+              <p class="max-w-reading text-base leading-8 text-ink/75 sm:text-lg">
+                Kawka Dnia zbiera to, co naprawdę warto wiedzieć rano: jeden wyróżniony temat dnia, potem szybki przegląd Polski, świata i nauki.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 text-sm text-ink/70">
+              <span class="rounded-full border border-line bg-white/80 px-4 py-2">3 sekcje tematyczne</span>
+              <span class="rounded-full border border-line bg-white/80 px-4 py-2">Czytelny układ kart</span>
+              <span class="rounded-full border border-line bg-white/80 px-4 py-2">Gotowe pod Astro + Tailwind</span>
+            </div>
+          </div>
+
+          <aside class="rounded-panel border border-line bg-white/90 p-6 shadow-card">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-brand-mocha">DateSelector</p>
+                <h2 class="mt-2 font-heading text-2xl text-brand-espresso">Wybierz wydanie</h2>
+              </div>
+              <span class="rounded-full bg-brand-latte px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-brand-mocha">Live mock</span>
+            </div>
+
+            <label for="edition-date" class="mt-6 block text-sm font-medium text-ink">Data wydania</label>
+            <div class="mt-2 rounded-2xl border border-line bg-surface p-1">
+              <select
+                id="edition-date"
+                name="edition-date"
+                class="w-full rounded-xl border-0 bg-transparent px-4 py-3 text-base text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                <option>3 kwietnia 2026 — piątek</option>
+                <option>2 kwietnia 2026 — czwartek</option>
+                <option>1 kwietnia 2026 — środa</option>
+                <option>31 marca 2026 — wtorek</option>
+              </select>
+            </div>
+
+            <div class="mt-6 space-y-4 rounded-3xl bg-brand-cream p-5">
+              <p class="text-sm font-semibold uppercase tracking-[0.24em] text-brand-mocha">Dlaczego to działa</p>
+              <ul class="space-y-3 text-sm leading-7 text-ink/80">
+                <li>• Wyróżniony news dnia buduje czytelną hierarchię.</li>
+                <li>• Karty są lekkie wizualnie i łatwe do przepisania na komponenty Astro.</li>
+                <li>• Ciepła paleta daje newsroomowi bardziej ludzki, poranny charakter.</li>
+              </ul>
+            </div>
+          </aside>
+        </section>
+
+        <section id="news-dnia" class="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+          <article class="overflow-hidden rounded-[2rem] border border-line bg-white shadow-card">
+            <div class="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
+              <div class="flex flex-col justify-between bg-brand-espresso px-6 py-8 text-brand-cream sm:px-8 sm:py-10">
+                <div class="space-y-5">
+                  <p class="inline-flex w-fit items-center rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-brand-latte">
+                    FeaturedNews · News dnia
+                  </p>
+                  <div class="space-y-4">
+                    <h2 class="font-heading text-3xl leading-tight sm:text-4xl">
+                      Polska sieć kawiarni rusza z programem „kubek za news” — poranny briefing trafia do klientów przy pierwszym zamówieniu.
+                    </h2>
+                    <p class="max-w-reading text-sm leading-7 text-brand-latte/90 sm:text-base">
+                      Pilotaż łączy krótką prasówkę z codziennym rytuałem picia kawy. Klienci dostają trzy najważniejsze wiadomości dnia wraz z krótkim komentarzem redakcyjnym i linkami do źródeł.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mt-8 flex flex-wrap items-center gap-3 text-sm">
+                  <a
+                    href="https://kawkadnia.pl"
+                    class="inline-flex items-center justify-center rounded-full bg-accent px-5 py-3 font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-mocha focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  >
+                    Czytaj temat dnia
+                  </a>
+                  <span class="rounded-full border border-white/15 px-4 py-2 text-brand-latte/90">Czas czytania: 3 min</span>
+                </div>
+              </div>
+
+              <div class="flex flex-col justify-between bg-brand-cream px-6 py-8 sm:px-8 sm:py-10">
+                <div class="space-y-4">
+                  <p class="text-sm font-semibold uppercase tracking-[0.24em] text-brand-mocha">SourceBadge</p>
+                  <a
+                    href="https://www.pb.pl"
+                    target="_blank"
+                    rel="noreferrer"
+                    class="inline-flex items-center gap-2 rounded-full border border-brand-biscuit bg-white px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  >
+                    Puls Biznesu
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </div>
+
+                <dl class="mt-8 grid gap-5 sm:grid-cols-3">
+                  <div class="rounded-3xl border border-line bg-white p-4">
+                    <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-mocha">Kategoria</dt>
+                    <dd class="mt-2 text-sm font-medium text-ink">Media & retail</dd>
+                  </div>
+                  <div class="rounded-3xl border border-line bg-white p-4">
+                    <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-mocha">Ton</dt>
+                    <dd class="mt-2 text-sm font-medium text-ink">Lekki, rzeczowy</dd>
+                  </div>
+                  <div class="rounded-3xl border border-line bg-white p-4">
+                    <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-mocha">Format</dt>
+                    <dd class="mt-2 text-sm font-medium text-ink">PoC statyczny</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="mx-auto max-w-7xl space-y-10 px-4 pb-16 sm:px-6 lg:px-8 lg:pb-20">
+          <div id="polska" class="space-y-5">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-brand-mocha">SectionHeader</p>
+                <h2 class="font-heading text-3xl text-brand-espresso">POLSKA</h2>
+              </div>
+              <p class="max-w-2xl text-sm leading-7 text-ink/70">Krótki przegląd tego, co dziś wpływa na codzienność, portfele i tempo miasta.</p>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Warszawa testuje inteligentne przystanki z ekranami jakości powietrza</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Nowe przystanki mają pokazywać opóźnienia, alerty miejskie i lokalne pomiary smogu. Miasto chce połączyć funkcjonalność z prostą, czytelną informacją dla pasażerów.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://tvn24.pl" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">TVN24
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">Miasto</span>
+                </div>
+              </article>
+
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Polskie startupy klimatyczne przyciągnęły rekordowy kapitał w pierwszym kwartale</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Inwestorzy coraz chętniej stawiają na rozwiązania związane z energią, logistyką i retencją wody. Eksperci mówią o przejściu od eksperymentu do realnego wzrostu.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://businessinsider.com.pl" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Business Insider
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">Biznes</span>
+                </div>
+              </article>
+
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Szkoły w Krakowie sprawdzają krótsze podsumowania lekcji generowane przez AI</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Nauczyciele mają dostawać streszczenia lekcji i listę zadań domowych w bardziej uporządkowanej formie. Pilotaż ma ograniczyć chaos informacyjny po zajęciach.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://wyborcza.pl" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Wyborcza
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">Edukacja</span>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div id="swiat" class="space-y-5">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-brand-mocha">SectionHeader</p>
+                <h2 class="font-heading text-3xl text-brand-espresso">ŚWIAT</h2>
+              </div>
+              <p class="max-w-2xl text-sm leading-7 text-ink/70">Globalne tematy podane lekko — tak, by złapać kontekst jeszcze przed pierwszym spotkaniem.</p>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Lizbona wprowadza ciche strefy pracy w najpopularniejszych kawiarniach</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Władze miasta chcą wesprzeć freelancerów i turystów pracujących zdalnie. Program łączy lokalne biznesy z miejskim standardem dostępności Wi‑Fi i ergonomii.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://www.reuters.com" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Reuters
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">Miasta</span>
+                </div>
+              </article>
+
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Nowy raport OECD pokazuje, że mikro-formaty newsowe rosną szybciej niż newslettery</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Czytelnicy chcą krótszych form, ale nadal oczekują wiarygodnych źródeł. Najlepiej radzą sobie produkty łączące selekcję treści z czytelną warstwą wizualną.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://www.ft.com" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Financial Times
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">Media</span>
+                </div>
+              </article>
+
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Tokio testuje poranny indeks skupienia dla pracowników biurowych</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Firmy dostają rekomendacje, kiedy planować spotkania i pracę głęboką. System bazuje na ruchu miejskim, jakości snu i anonimowych danych z urządzeń wearable.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://www.bbc.com" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">BBC
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">Praca</span>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div id="nauka" class="space-y-5">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-brand-mocha">SectionHeader</p>
+                <h2 class="font-heading text-3xl text-brand-espresso">NAUKA</h2>
+              </div>
+              <p class="max-w-2xl text-sm leading-7 text-ink/70">Na koniec coś dla ciekawych świata: badania, technologia i rzeczy, które dobrze brzmią przy drugim łyku kawy.</p>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Europejskie laboratoria tworzą mapę dźwięków miast pomagającą projektować spokojniejsze osiedla</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Badacze analizują, jak poranne bodźce wpływają na stres i koncentrację. Wyniki mają wspierać urbanistów w tworzeniu bardziej „łagodnych” przestrzeni do życia.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://www.nature.com" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Nature
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">Urbanistyka</span>
+                </div>
+              </article>
+
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Nowy model AI skraca analizy medyczne, ale lekarze nadal zostają w centrum decyzji</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Zespoły badawcze pokazują, że automatyczne podsumowania zwiększają tempo pracy, jeśli interfejs jest prosty, zaufany i nie ukrywa źródła informacji.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://www.science.org" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Science
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">AI</span>
+                </div>
+              </article>
+
+              <article class="rounded-panel border border-line bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-mocha">NewsCard</p>
+                <h3 class="mt-4 font-heading text-2xl leading-tight text-brand-espresso">Badacze z Kopenhagi mierzą wpływ światła dziennego na tempo podejmowania decyzji</h3>
+                <p class="mt-4 text-sm leading-7 text-ink/75">Wstępne wyniki sugerują, że łagodne, ciepłe interfejsy i czytelne komunikaty pomagają szybciej porządkować informacje zaraz po przebudzeniu.</p>
+                <div class="mt-6 flex items-center justify-between gap-3">
+                  <a href="https://www.newscientist.com" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-brand-espresso transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">New Scientist
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                  <span class="text-xs font-medium uppercase tracking-[0.16em] text-ink/45">Neuro</span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="border-t border-line bg-white/70">
+        <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_1fr] lg:px-8">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.24em] text-brand-mocha">Design system handoff</p>
+            <h2 class="mt-3 font-heading text-2xl text-brand-espresso">Tokeny i komponenty gotowe do przepisania</h2>
+            <p class="mt-4 max-w-reading text-sm leading-7 text-ink/75">
+              Semantyczne tokeny: <span class="font-semibold text-ink">brand.*</span>, <span class="font-semibold text-ink">accent</span>, <span class="font-semibold text-ink">surface</span>, <span class="font-semibold text-ink">ink</span>, <span class="font-semibold text-ink">line</span>. Komponenty do ekstrakcji: <span class="font-semibold text-ink">FeaturedNews</span>, <span class="font-semibold text-ink">NewsCard</span>, <span class="font-semibold text-ink">SectionHeader</span>, <span class="font-semibold text-ink">DateSelector</span>, <span class="font-semibold text-ink">SourceBadge</span>.
+            </p>
+          </div>
+          <div class="rounded-panel border border-line bg-brand-cream p-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.24em] text-brand-mocha">UI notes</p>
+            <ul class="mt-4 space-y-3 text-sm leading-7 text-ink/80">
+              <li>• Fonty: Fraunces (nagłówki) + Inter (body).</li>
+              <li>• Rytm spacingu: sekcje 40–64 px, karty 24 px, pill buttons 12–16 px.</li>
+              <li>• Radius: 24 px dla kart i paneli, miękki newsroom zamiast technicznego dashboardu.</li>
+              <li>• Cienie: delikatne, ciepłe, bez ciężkiego kontrastu.</li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
