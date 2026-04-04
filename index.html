@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,52 +20,139 @@
         theme: {
           extend: {
             fontFamily: {
-              serif: ['"Playfair Display"', 'Georgia', 'serif'],
-              sans: ['Inter', 'system-ui', 'sans-serif']
+              nameplate: ['"Playfair Display SC"', 'Georgia', 'serif'],
+              headline: ['"Playfair Display"', 'Georgia', 'serif'],
+              body: ['"Libre Baskerville"', 'Georgia', 'serif'],
+              label: ['"EB Garamond"', 'Georgia', 'serif']
             },
             maxWidth: {
-              'editorial': '64rem'
+              broadsheet: '58rem'
+            },
+            colors: {
+              ink: '#0a0a0a',
+              paper: '#ffffff',
+              rule: '#000000',
+              'rule-light': '#b0b0b0',
+              'text-body': '#1a1a1a',
+              'text-secondary': '#404040',
+              'text-muted': '#6b6b6b'
             }
           }
         }
       };
     </script>
     <style>
-      body { background: #fff; }
-      a { text-decoration: none; }
+      body {
+        background: #fff;
+        color: #0a0a0a;
+      }
+      a { text-decoration: none; color: inherit; }
       a:hover { text-decoration: underline; }
 
-      .masthead-rule {
+      /* Oxford double rule — thick on top, thin below */
+      .rule-oxford {
         border: none;
-        border-top: 4px solid #000;
+        border-top: 3px solid #000;
+        padding-bottom: 3px;
+        background: transparent;
       }
-      .masthead-rule-thin {
-        border: none;
+      .rule-oxford::after {
+        content: '';
+        display: block;
         border-top: 1px solid #000;
-        margin-top: 4px;
+        margin-top: 3px;
       }
 
-      .section-rule {
+      /* Single thick rule */
+      .rule-heavy {
         border: none;
         border-top: 2px solid #000;
       }
 
-      .article-rule {
+      /* Hairline rule */
+      .rule-hair {
         border: none;
-        border-top: 1px solid #d4d4d4;
+        border-top: 1px solid #b0b0b0;
       }
 
+      /* Thin black rule */
+      .rule-thin {
+        border: none;
+        border-top: 1px solid #000;
+      }
+
+      /* Section rule — medium weight */
+      .rule-section {
+        border: none;
+        border-top: 1.5px solid #000;
+      }
+
+      /* Featured headline sizing */
       .featured-headline {
-        font-size: clamp(2rem, 4vw, 3.25rem);
-        line-height: 1.1;
-        letter-spacing: -0.02em;
+        font-size: clamp(1.85rem, 4.5vw, 3rem);
+        line-height: 1.08;
+        letter-spacing: -0.015em;
       }
 
+      /* Drop cap */
+      .drop-cap::first-letter {
+        font-family: 'Playfair Display', Georgia, serif;
+        float: left;
+        font-size: 3.8em;
+        line-height: 0.75;
+        padding-right: 0.08em;
+        padding-top: 0.06em;
+        font-weight: 900;
+        color: #0a0a0a;
+      }
+
+      /* Section label — small caps style */
       .section-label {
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
         font-weight: 600;
+      }
+
+      /* Dateline style */
+      .dateline {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+      }
+
+      /* Byline */
+      .byline {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        color: #6b6b6b;
+        text-transform: uppercase;
+      }
+
+      /* Centered ornament between articles */
+      .ornament {
+        text-align: center;
+        font-size: 0.65rem;
+        letter-spacing: 0.6em;
+        color: #6b6b6b;
+      }
+
+      /* Nameplate */
+      .nameplate {
+        font-size: clamp(2.8rem, 7vw, 4.5rem);
+        line-height: 1;
+        letter-spacing: 0.06em;
+      }
+
+      /* Motto */
+      .motto {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-style: italic;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        color: #404040;
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -76,185 +163,201 @@
       }
     </style>
   </head>
-  <body class="font-sans text-black antialiased">
-    <div class="w-[90%] lg:w-[75%] max-w-editorial mx-auto py-8 sm:py-12">
+  <body class="font-body text-ink antialiased">
+    <div class="w-[92%] sm:w-[85%] lg:w-[72%] max-w-broadsheet mx-auto pt-6 sm:pt-10 pb-10 sm:pb-16">
 
-      <!-- Masthead -->
-      <header class="mb-10 sm:mb-14">
-        <div class="masthead-rule"></div>
-        <div class="masthead-rule-thin"></div>
-        <div class="flex items-baseline justify-between mt-5 mb-5">
-          <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none">
+      <!-- ============ MASTHEAD ============ -->
+      <header class="mb-8 sm:mb-12">
+        <!-- Top Oxford rule -->
+        <div class="rule-oxford" role="presentation"></div>
+
+        <!-- Volume / Edition line -->
+        <div class="flex items-center justify-between mt-4 mb-1">
+          <span class="dateline">Rok I &middot; Nr&nbsp;94</span>
+          <span class="dateline hidden sm:inline">Cena: bezp&#322;atnie</span>
+        </div>
+
+        <!-- Nameplate -->
+        <div class="text-center py-4 sm:py-6">
+          <h1 class="font-nameplate nameplate font-black">
             Kawka Dnia
           </h1>
-          <span class="text-xs text-neutral-400 hidden sm:block">☕</span>
+          <p class="motto mt-2">Poranna dawka news&oacute;w do porannej kawy</p>
         </div>
-        <div class="flex items-center justify-between text-xs text-neutral-500 font-sans">
-          <span class="tracking-wide uppercase">Poranna dawka newsów</span>
-          <time>Piątek, 3 kwietnia 2026</time>
+
+        <!-- Dateline bar -->
+        <div class="rule-thin" role="presentation"></div>
+        <div class="flex items-center justify-between mt-2 mb-2">
+          <time class="dateline">Sobota, 4 kwietnia 2026&nbsp;r.</time>
+          <span class="dateline hidden sm:inline">Warszawa</span>
         </div>
-        <div class="masthead-rule mt-5"></div>
-        <div class="masthead-rule-thin"></div>
+        <div class="rule-heavy" role="presentation"></div>
       </header>
 
-      <!-- Featured Story -->
-      <article class="mb-14 sm:mb-20">
-        <a href="https://kawkadnia.pl" class="group cursor-pointer">
-          <h2 class="font-serif font-black featured-headline">
-            Polska sieć kawiarni rusza z&nbsp;programem „kubek za&nbsp;news" — poranny briefing trafia do&nbsp;klientów przy pierwszym zamówieniu
+      <!-- ============ FEATURED / LEAD STORY ============ -->
+      <article class="mb-10 sm:mb-14">
+        <a href="https://kawkadnia.pl" class="group cursor-pointer block">
+          <h2 class="font-headline font-black featured-headline">
+            Polska sie&#263; kawiarni rusza z&nbsp;programem &#8222;kubek za&nbsp;news&#8221; &#8212; poranny briefing trafia do&nbsp;klient&oacute;w przy pierwszym zam&oacute;wieniu
           </h2>
         </a>
-        <p class="mt-5 sm:mt-6 text-lg sm:text-xl leading-relaxed text-neutral-600 max-w-[65ch] font-light">
-          Pilotaż łączy krótką prasówkę z codziennym rytuałem picia kawy. Klienci dostają trzy najważniejsze wiadomości dnia wraz z&nbsp;krótkim komentarzem redakcyjnym i&nbsp;linkami do źródeł.
+        <div class="rule-hair mt-4 mb-4" role="presentation"></div>
+        <p class="text-base sm:text-lg leading-relaxed text-text-body max-w-[62ch] drop-cap">
+          Pilota&#380; &#322;&#261;czy kr&oacute;tk&#261; pras&oacute;wk&#281; z&nbsp;codziennym rytua&#322;em picia kawy. Klienci dostaj&#261; trzy najwa&#380;niejsze wiadomo&#347;ci dnia wraz z&nbsp;kr&oacute;tkim komentarzem redakcyjnym i&nbsp;linkami do &#378;r&oacute;de&#322;. Format przypomina klasyczny skr&oacute;t prasowy, kt&oacute;ry mo&#380;na przeczyta&#263; w&nbsp;czasie jednego espresso.
         </p>
-        <p class="mt-3 text-xs text-neutral-400 tracking-wide uppercase">Puls Biznesu</p>
+        <p class="byline mt-3">Puls Biznesu</p>
       </article>
 
-      <!-- ===================== POLSKA ===================== -->
-      <section class="mb-14 sm:mb-20">
-        <div class="section-rule"></div>
-        <h2 class="section-label font-sans mt-4 mb-8 text-black">Polska</h2>
+      <div class="rule-oxford mb-10 sm:mb-14" role="presentation"></div>
 
-        <article class="mb-10">
-          <a href="https://tvn24.pl" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
-              Warszawa testuje inteligentne przystanki z&nbsp;ekranami jakości powietrza
+      <!-- ============ POLSKA ============ -->
+      <section class="mb-10 sm:mb-14">
+        <div class="rule-section" role="presentation"></div>
+        <h2 class="section-label mt-3 mb-6">Polska</h2>
+
+        <article class="mb-8">
+          <a href="https://tvn24.pl" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
+              Warszawa testuje inteligentne przystanki z&nbsp;ekranami jako&#347;ci powietrza
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Nowe przystanki mają pokazywać opóźnienia, alerty miejskie i&nbsp;lokalne pomiary smogu. Miasto chce połączyć funkcjonalność z&nbsp;prostą, czytelną informacją dla pasażerów.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            Nowe przystanki maj&#261; pokazywa&#263; op&oacute;&#378;nienia, alerty miejskie i&nbsp;lokalne pomiary smogu. Miasto chce po&#322;&#261;czy&#263; funkcjonalno&#347;&#263; z&nbsp;prost&#261;, czyteln&#261; informacj&#261; dla pasa&#380;er&oacute;w.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">TVN24</p>
+          <p class="byline mt-2">TVN24</p>
         </article>
 
-        <hr class="article-rule my-8" />
+        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
 
-        <article class="mb-10">
-          <a href="https://businessinsider.com.pl" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
-              Polskie startupy klimatyczne przyciągnęły rekordowy kapitał w&nbsp;pierwszym kwartale
+        <article class="mb-8">
+          <a href="https://businessinsider.com.pl" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
+              Polskie startupy klimatyczne przyci&#261;gn&#281;&#322;y rekordowy kapita&#322; w&nbsp;pierwszym kwartale
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Inwestorzy coraz chętniej stawiają na rozwiązania związane z&nbsp;energią, logistyką i&nbsp;retencją wody. Eksperci mówią o&nbsp;przejściu od eksperymentu do realnego wzrostu.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            Inwestorzy coraz ch&#281;tniej stawiaj&#261; na rozwi&#261;zania zwi&#261;zane z&nbsp;energi&#261;, logistyk&#261; i&nbsp;retencj&#261; wody. Eksperci m&oacute;wi&#261; o&nbsp;przej&#347;ciu od eksperymentu do realnego wzrostu.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Business Insider</p>
+          <p class="byline mt-2">Business Insider</p>
         </article>
 
-        <hr class="article-rule my-8" />
+        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
 
         <article>
-          <a href="https://wyborcza.pl" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
-              Szkoły w&nbsp;Krakowie sprawdzają krótsze podsumowania lekcji generowane przez AI
+          <a href="https://wyborcza.pl" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
+              Szko&#322;y w&nbsp;Krakowie sprawdzaj&#261; kr&oacute;tsze podsumowania lekcji generowane przez AI
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Nauczyciele mają dostawać streszczenia lekcji i&nbsp;listę zadań domowych w&nbsp;bardziej uporządkowanej formie. Pilotaż ma ograniczyć chaos informacyjny po zajęciach.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            Nauczyciele maj&#261; dostawa&#263; streszczenia lekcji i&nbsp;list&#281; zada&#324; domowych w&nbsp;bardziej uporz&#261;dkowanej formie. Pilota&#380; ma ograniczy&#263; chaos informacyjny po zaj&#281;ciach.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Wyborcza</p>
+          <p class="byline mt-2">Wyborcza</p>
         </article>
       </section>
 
-      <!-- ===================== ŚWIAT ===================== -->
-      <section class="mb-14 sm:mb-20">
-        <div class="section-rule"></div>
-        <h2 class="section-label font-sans mt-4 mb-8 text-black">Świat</h2>
+      <div class="rule-oxford mb-10 sm:mb-14" role="presentation"></div>
 
-        <article class="mb-10">
-          <a href="https://www.reuters.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+      <!-- ============ ŚWIAT ============ -->
+      <section class="mb-10 sm:mb-14">
+        <div class="rule-section" role="presentation"></div>
+        <h2 class="section-label mt-3 mb-6">&#346;wiat</h2>
+
+        <article class="mb-8">
+          <a href="https://www.reuters.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
               Lizbona wprowadza ciche strefy pracy w&nbsp;najpopularniejszych kawiarniach
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Władze miasta chcą wesprzeć freelancerów i&nbsp;turystów pracujących zdalnie. Program łączy lokalne biznesy z&nbsp;miejskim standardem dostępności Wi‑Fi i&nbsp;ergonomii.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            W&#322;adze miasta chc&#261; wesprze&#263; freelancer&oacute;w i&nbsp;turyst&oacute;w pracuj&#261;cych zdalnie. Program &#322;&#261;czy lokalne biznesy z&nbsp;miejskim standardem dost&#281;pno&#347;ci Wi&#8209;Fi i&nbsp;ergonomii.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Reuters</p>
+          <p class="byline mt-2">Reuters</p>
         </article>
 
-        <hr class="article-rule my-8" />
+        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
 
-        <article class="mb-10">
-          <a href="https://www.ft.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
-              Nowy raport OECD pokazuje, że mikro-formaty newsowe rosną szybciej niż newslettery
+        <article class="mb-8">
+          <a href="https://www.ft.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
+              Nowy raport OECD pokazuje, &#380;e mikro-formaty newsowe rosn&#261; szybciej ni&#380; newslettery
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Czytelnicy chcą krótszych form, ale nadal oczekują wiarygodnych źródeł. Najlepiej radzą sobie produkty łączące selekcję treści z&nbsp;czytelną warstwą wizualną.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            Czytelnicy chc&#261; kr&oacute;tszych form, ale nadal oczekuj&#261; wiarygodnych &#378;r&oacute;de&#322;. Najlepiej radz&#261; sobie produkty &#322;&#261;cz&#261;ce selekcj&#281; tre&#347;ci z&nbsp;czyteln&#261; warstw&#261; wizualn&#261;.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Financial Times</p>
+          <p class="byline mt-2">Financial Times</p>
         </article>
 
-        <hr class="article-rule my-8" />
+        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
 
         <article>
-          <a href="https://www.bbc.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
-              Tokio testuje poranny indeks skupienia dla pracowników biurowych
+          <a href="https://www.bbc.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
+              Tokio testuje poranny indeks skupienia dla pracownik&oacute;w biurowych
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Firmy dostają rekomendacje, kiedy planować spotkania i&nbsp;pracę głęboką. System bazuje na ruchu miejskim, jakości snu i&nbsp;anonimowych danych z&nbsp;urządzeń wearable.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            Firmy dostaj&#261; rekomendacje, kiedy planowa&#263; spotkania i&nbsp;prac&#281; g&#322;&#281;bok&#261;. System bazuje na ruchu miejskim, jako&#347;ci snu i&nbsp;anonimowych danych z&nbsp;urz&#261;dze&#324; wearable.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">BBC</p>
+          <p class="byline mt-2">BBC</p>
         </article>
       </section>
 
-      <!-- ===================== NAUKA ===================== -->
-      <section class="mb-14 sm:mb-20">
-        <div class="section-rule"></div>
-        <h2 class="section-label font-sans mt-4 mb-8 text-black">Nauka</h2>
+      <div class="rule-oxford mb-10 sm:mb-14" role="presentation"></div>
 
-        <article class="mb-10">
-          <a href="https://www.nature.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
-              Europejskie laboratoria tworzą mapę dźwięków miast pomagającą projektować spokojniejsze osiedla
+      <!-- ============ NAUKA ============ -->
+      <section class="mb-10 sm:mb-14">
+        <div class="rule-section" role="presentation"></div>
+        <h2 class="section-label mt-3 mb-6">Nauka</h2>
+
+        <article class="mb-8">
+          <a href="https://www.nature.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
+              Europejskie laboratoria tworz&#261; map&#281; d&#378;wi&#281;k&oacute;w miast pomagaj&#261;c&#261; projektowa&#263; spokojniejsze osiedla
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Badacze analizują, jak poranne bodźce wpływają na stres i&nbsp;koncentrację. Wyniki mają wspierać urbanistów w&nbsp;tworzeniu bardziej „łagodnych" przestrzeni do życia.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            Badacze analizuj&#261;, jak poranne bod&#378;ce wp&#322;ywaj&#261; na stres i&nbsp;koncentracj&#281;. Wyniki maj&#261; wspiera&#263; urbanist&oacute;w w&nbsp;tworzeniu bardziej &#8222;&#322;agodnych&#8221; przestrzeni do &#380;ycia.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Nature</p>
+          <p class="byline mt-2">Nature</p>
         </article>
 
-        <hr class="article-rule my-8" />
+        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
 
-        <article class="mb-10">
-          <a href="https://www.science.org" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
-              Nowy model AI skraca analizy medyczne, ale lekarze nadal zostają w&nbsp;centrum decyzji
+        <article class="mb-8">
+          <a href="https://www.science.org" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
+              Nowy model AI skraca analizy medyczne, ale lekarze nadal zostaj&#261; w&nbsp;centrum decyzji
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Zespoły badawcze pokazują, że automatyczne podsumowania zwiększają tempo pracy, jeśli interfejs jest prosty, zaufany i&nbsp;nie ukrywa źródła informacji.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            Zespo&#322;y badawcze pokazuj&#261;, &#380;e automatyczne podsumowania zwi&#281;kszaj&#261; tempo pracy, je&#347;li interfejs jest prosty, zaufany i&nbsp;nie ukrywa &#378;r&oacute;d&#322;a informacji.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Science</p>
+          <p class="byline mt-2">Science</p>
         </article>
 
-        <hr class="article-rule my-8" />
+        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
 
         <article>
-          <a href="https://www.newscientist.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
-            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
-              Badacze z&nbsp;Kopenhagi mierzą wpływ światła dziennego na tempo podejmowania decyzji
+          <a href="https://www.newscientist.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
+            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
+              Badacze z&nbsp;Kopenhagi mierz&#261; wp&#322;yw &#347;wiat&#322;a dziennego na tempo podejmowania decyzji
             </h3>
           </a>
-          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
-            Wstępne wyniki sugerują, że łagodne, ciepłe interfejsy i&nbsp;czytelne komunikaty pomagają szybciej porządkować informacje zaraz po przebudzeniu.
+          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
+            Wst&#281;pne wyniki sugeruj&#261;, &#380;e &#322;agodne, ciep&#322;e interfejsy i&nbsp;czytelne komunikaty pomagaj&#261; szybciej porz&#261;dkowa&#263; informacje zaraz po przebudzeniu.
           </p>
-          <p class="mt-2 text-xs text-neutral-400 tracking-wide">New Scientist</p>
+          <p class="byline mt-2">New Scientist</p>
         </article>
       </section>
 
-      <!-- Footer -->
+      <!-- ============ FOOTER / COLOPHON ============ -->
       <footer>
-        <div class="masthead-rule"></div>
-        <div class="masthead-rule-thin"></div>
-        <div class="flex items-center justify-between mt-5">
-          <span class="text-xs text-neutral-400 tracking-wide uppercase font-sans">Kawka Dnia — 2026</span>
-          <span class="text-xs text-neutral-400">☕</span>
+        <div class="rule-oxford" role="presentation"></div>
+        <div class="flex items-center justify-between mt-4">
+          <span class="dateline uppercase">Kawka Dnia &mdash; 2026</span>
+          <span class="dateline italic">Redakcja poranna</span>
         </div>
       </footer>
 
