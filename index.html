@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,6 +22,9 @@
             fontFamily: {
               serif: ['"Playfair Display"', 'Georgia', 'serif'],
               sans: ['Inter', 'system-ui', 'sans-serif']
+            },
+            maxWidth: {
+              'editorial': '64rem'
             }
           }
         }
@@ -29,7 +32,42 @@
     </script>
     <style>
       body { background: #fff; }
+      a { text-decoration: none; }
       a:hover { text-decoration: underline; }
+
+      .masthead-rule {
+        border: none;
+        border-top: 4px solid #000;
+      }
+      .masthead-rule-thin {
+        border: none;
+        border-top: 1px solid #000;
+        margin-top: 4px;
+      }
+
+      .section-rule {
+        border: none;
+        border-top: 2px solid #000;
+      }
+
+      .article-rule {
+        border: none;
+        border-top: 1px solid #d4d4d4;
+      }
+
+      .featured-headline {
+        font-size: clamp(2rem, 4vw, 3.25rem);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+
+      .section-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         * { transition-duration: 0.01ms !important; }
       }
@@ -39,140 +77,185 @@
     </style>
   </head>
   <body class="font-sans text-black antialiased">
-    <div class="max-w-2xl mx-auto px-5 py-10 sm:py-16">
+    <div class="w-[90%] lg:w-[75%] max-w-editorial mx-auto py-8 sm:py-12">
 
-      <!-- Header -->
-      <header class="mb-10">
-        <h1 class="font-serif text-3xl sm:text-4xl font-black tracking-tight">
-          ☕ Kawka Dnia
-        </h1>
-        <p class="mt-2 text-sm text-neutral-500">Piątek, 3 kwietnia 2026</p>
+      <!-- Masthead -->
+      <header class="mb-10 sm:mb-14">
+        <div class="masthead-rule"></div>
+        <div class="masthead-rule-thin"></div>
+        <div class="flex items-baseline justify-between mt-5 mb-5">
+          <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none">
+            Kawka Dnia
+          </h1>
+          <span class="text-xs text-neutral-400 hidden sm:block">☕</span>
+        </div>
+        <div class="flex items-center justify-between text-xs text-neutral-500 font-sans">
+          <span class="tracking-wide uppercase">Poranna dawka newsów</span>
+          <time>Piątek, 3 kwietnia 2026</time>
+        </div>
+        <div class="masthead-rule mt-5"></div>
+        <div class="masthead-rule-thin"></div>
       </header>
 
-      <hr class="border-black mb-10" />
-
-      <!-- Featured -->
-      <article class="mb-8">
-        <a href="https://kawkadnia.pl" class="no-underline hover:underline">
-          <h2 class="font-serif text-2xl sm:text-3xl font-bold leading-tight">
-            Polska sieć kawiarni rusza z&nbsp;programem „kubek za news" — poranny briefing trafia do&nbsp;klientów przy pierwszym zamówieniu
+      <!-- Featured Story -->
+      <article class="mb-14 sm:mb-20">
+        <a href="https://kawkadnia.pl" class="group cursor-pointer">
+          <h2 class="font-serif font-black featured-headline">
+            Polska sieć kawiarni rusza z&nbsp;programem „kubek za&nbsp;news" — poranny briefing trafia do&nbsp;klientów przy pierwszym zamówieniu
           </h2>
         </a>
-        <p class="mt-3 text-base leading-relaxed text-neutral-700" style="max-width:60ch">
+        <p class="mt-5 sm:mt-6 text-lg sm:text-xl leading-relaxed text-neutral-600 max-w-[65ch] font-light">
           Pilotaż łączy krótką prasówkę z codziennym rytuałem picia kawy. Klienci dostają trzy najważniejsze wiadomości dnia wraz z&nbsp;krótkim komentarzem redakcyjnym i&nbsp;linkami do źródeł.
         </p>
-        <p class="mt-2 text-xs text-neutral-400">Puls Biznesu</p>
+        <p class="mt-3 text-xs text-neutral-400 tracking-wide uppercase">Puls Biznesu</p>
       </article>
 
-      <hr class="border-neutral-200 my-8" />
+      <!-- ===================== POLSKA ===================== -->
+      <section class="mb-14 sm:mb-20">
+        <div class="section-rule"></div>
+        <h2 class="section-label font-sans mt-4 mb-8 text-black">Polska</h2>
 
-      <!-- Polska -->
-      <section>
-        <h2 class="font-serif text-lg font-bold tracking-tight mb-6">Polska</h2>
-
-        <article class="mb-8">
-          <a href="https://tvn24.pl" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Warszawa testuje inteligentne przystanki z&nbsp;ekranami jakości powietrza</h3>
+        <article class="mb-10">
+          <a href="https://tvn24.pl" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Warszawa testuje inteligentne przystanki z&nbsp;ekranami jakości powietrza
+            </h3>
           </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Nowe przystanki mają pokazywać opóźnienia, alerty miejskie i&nbsp;lokalne pomiary smogu. Miasto chce połączyć funkcjonalność z&nbsp;prostą, czytelną informacją dla pasażerów.</p>
-          <p class="mt-2 text-xs text-neutral-400">TVN24</p>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Nowe przystanki mają pokazywać opóźnienia, alerty miejskie i&nbsp;lokalne pomiary smogu. Miasto chce połączyć funkcjonalność z&nbsp;prostą, czytelną informacją dla pasażerów.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">TVN24</p>
         </article>
 
-        <hr class="border-neutral-200 my-6" />
+        <hr class="article-rule my-8" />
 
-        <article class="mb-8">
-          <a href="https://businessinsider.com.pl" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Polskie startupy klimatyczne przyciągnęły rekordowy kapitał w&nbsp;pierwszym kwartale</h3>
+        <article class="mb-10">
+          <a href="https://businessinsider.com.pl" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Polskie startupy klimatyczne przyciągnęły rekordowy kapitał w&nbsp;pierwszym kwartale
+            </h3>
           </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Inwestorzy coraz chętniej stawiają na rozwiązania związane z&nbsp;energią, logistyką i&nbsp;retencją wody. Eksperci mówią o&nbsp;przejściu od eksperymentu do realnego wzrostu.</p>
-          <p class="mt-2 text-xs text-neutral-400">Business Insider</p>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Inwestorzy coraz chętniej stawiają na rozwiązania związane z&nbsp;energią, logistyką i&nbsp;retencją wody. Eksperci mówią o&nbsp;przejściu od eksperymentu do realnego wzrostu.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Business Insider</p>
         </article>
 
-        <hr class="border-neutral-200 my-6" />
+        <hr class="article-rule my-8" />
 
-        <article class="mb-8">
-          <a href="https://wyborcza.pl" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Szkoły w&nbsp;Krakowie sprawdzają krótsze podsumowania lekcji generowane przez AI</h3>
+        <article>
+          <a href="https://wyborcza.pl" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Szkoły w&nbsp;Krakowie sprawdzają krótsze podsumowania lekcji generowane przez AI
+            </h3>
           </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Nauczyciele mają dostawać streszczenia lekcji i&nbsp;listę zadań domowych w&nbsp;bardziej uporządkowanej formie. Pilotaż ma ograniczyć chaos informacyjny po zajęciach.</p>
-          <p class="mt-2 text-xs text-neutral-400">Wyborcza</p>
-        </article>
-      </section>
-
-      <hr class="border-neutral-200 my-8" />
-
-      <!-- Świat -->
-      <section>
-        <h2 class="font-serif text-lg font-bold tracking-tight mb-6">Świat</h2>
-
-        <article class="mb-8">
-          <a href="https://www.reuters.com" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Lizbona wprowadza ciche strefy pracy w&nbsp;najpopularniejszych kawiarniach</h3>
-          </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Władze miasta chcą wesprzeć freelancerów i&nbsp;turystów pracujących zdalnie. Program łączy lokalne biznesy z&nbsp;miejskim standardem dostępności Wi‑Fi i&nbsp;ergonomii.</p>
-          <p class="mt-2 text-xs text-neutral-400">Reuters</p>
-        </article>
-
-        <hr class="border-neutral-200 my-6" />
-
-        <article class="mb-8">
-          <a href="https://www.ft.com" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Nowy raport OECD pokazuje, że mikro-formaty newsowe rosną szybciej niż newslettery</h3>
-          </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Czytelnicy chcą krótszych form, ale nadal oczekują wiarygodnych źródeł. Najlepiej radzą sobie produkty łączące selekcję treści z&nbsp;czytelną warstwą wizualną.</p>
-          <p class="mt-2 text-xs text-neutral-400">Financial Times</p>
-        </article>
-
-        <hr class="border-neutral-200 my-6" />
-
-        <article class="mb-8">
-          <a href="https://www.bbc.com" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Tokio testuje poranny indeks skupienia dla pracowników biurowych</h3>
-          </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Firmy dostają rekomendacje, kiedy planować spotkania i&nbsp;pracę głęboką. System bazuje na ruchu miejskim, jakości snu i&nbsp;anonimowych danych z&nbsp;urządzeń wearable.</p>
-          <p class="mt-2 text-xs text-neutral-400">BBC</p>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Nauczyciele mają dostawać streszczenia lekcji i&nbsp;listę zadań domowych w&nbsp;bardziej uporządkowanej formie. Pilotaż ma ograniczyć chaos informacyjny po zajęciach.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Wyborcza</p>
         </article>
       </section>
 
-      <hr class="border-neutral-200 my-8" />
+      <!-- ===================== ŚWIAT ===================== -->
+      <section class="mb-14 sm:mb-20">
+        <div class="section-rule"></div>
+        <h2 class="section-label font-sans mt-4 mb-8 text-black">Świat</h2>
 
-      <!-- Nauka -->
-      <section>
-        <h2 class="font-serif text-lg font-bold tracking-tight mb-6">Nauka</h2>
-
-        <article class="mb-8">
-          <a href="https://www.nature.com" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Europejskie laboratoria tworzą mapę dźwięków miast pomagającą projektować spokojniejsze osiedla</h3>
+        <article class="mb-10">
+          <a href="https://www.reuters.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Lizbona wprowadza ciche strefy pracy w&nbsp;najpopularniejszych kawiarniach
+            </h3>
           </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Badacze analizują, jak poranne bodźce wpływają na stres i&nbsp;koncentrację. Wyniki mają wspierać urbanistów w&nbsp;tworzeniu bardziej „łagodnych" przestrzeni do życia.</p>
-          <p class="mt-2 text-xs text-neutral-400">Nature</p>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Władze miasta chcą wesprzeć freelancerów i&nbsp;turystów pracujących zdalnie. Program łączy lokalne biznesy z&nbsp;miejskim standardem dostępności Wi‑Fi i&nbsp;ergonomii.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Reuters</p>
         </article>
 
-        <hr class="border-neutral-200 my-6" />
+        <hr class="article-rule my-8" />
 
-        <article class="mb-8">
-          <a href="https://www.science.org" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Nowy model AI skraca analizy medyczne, ale lekarze nadal zostają w&nbsp;centrum decyzji</h3>
+        <article class="mb-10">
+          <a href="https://www.ft.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Nowy raport OECD pokazuje, że mikro-formaty newsowe rosną szybciej niż newslettery
+            </h3>
           </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Zespoły badawcze pokazują, że automatyczne podsumowania zwiększają tempo pracy, jeśli interfejs jest prosty, zaufany i&nbsp;nie ukrywa źródła informacji.</p>
-          <p class="mt-2 text-xs text-neutral-400">Science</p>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Czytelnicy chcą krótszych form, ale nadal oczekują wiarygodnych źródeł. Najlepiej radzą sobie produkty łączące selekcję treści z&nbsp;czytelną warstwą wizualną.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Financial Times</p>
         </article>
 
-        <hr class="border-neutral-200 my-6" />
+        <hr class="article-rule my-8" />
 
-        <article class="mb-8">
-          <a href="https://www.newscientist.com" target="_blank" rel="noreferrer" class="no-underline hover:underline">
-            <h3 class="font-serif text-xl font-bold leading-snug">Badacze z&nbsp;Kopenhagi mierzą wpływ światła dziennego na tempo podejmowania decyzji</h3>
+        <article>
+          <a href="https://www.bbc.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Tokio testuje poranny indeks skupienia dla pracowników biurowych
+            </h3>
           </a>
-          <p class="mt-2 text-sm leading-relaxed text-neutral-700">Wstępne wyniki sugerują, że łagodne, ciepłe interfejsy i&nbsp;czytelne komunikaty pomagają szybciej porządkować informacje zaraz po przebudzeniu.</p>
-          <p class="mt-2 text-xs text-neutral-400">New Scientist</p>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Firmy dostają rekomendacje, kiedy planować spotkania i&nbsp;pracę głęboką. System bazuje na ruchu miejskim, jakości snu i&nbsp;anonimowych danych z&nbsp;urządzeń wearable.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">BBC</p>
+        </article>
+      </section>
+
+      <!-- ===================== NAUKA ===================== -->
+      <section class="mb-14 sm:mb-20">
+        <div class="section-rule"></div>
+        <h2 class="section-label font-sans mt-4 mb-8 text-black">Nauka</h2>
+
+        <article class="mb-10">
+          <a href="https://www.nature.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Europejskie laboratoria tworzą mapę dźwięków miast pomagającą projektować spokojniejsze osiedla
+            </h3>
+          </a>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Badacze analizują, jak poranne bodźce wpływają na stres i&nbsp;koncentrację. Wyniki mają wspierać urbanistów w&nbsp;tworzeniu bardziej „łagodnych" przestrzeni do życia.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Nature</p>
+        </article>
+
+        <hr class="article-rule my-8" />
+
+        <article class="mb-10">
+          <a href="https://www.science.org" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Nowy model AI skraca analizy medyczne, ale lekarze nadal zostają w&nbsp;centrum decyzji
+            </h3>
+          </a>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Zespoły badawcze pokazują, że automatyczne podsumowania zwiększają tempo pracy, jeśli interfejs jest prosty, zaufany i&nbsp;nie ukrywa źródła informacji.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">Science</p>
+        </article>
+
+        <hr class="article-rule my-8" />
+
+        <article>
+          <a href="https://www.newscientist.com" target="_blank" rel="noreferrer" class="group cursor-pointer">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold leading-snug">
+              Badacze z&nbsp;Kopenhagi mierzą wpływ światła dziennego na tempo podejmowania decyzji
+            </h3>
+          </a>
+          <p class="mt-3 text-base leading-relaxed text-neutral-600 max-w-[60ch]">
+            Wstępne wyniki sugerują, że łagodne, ciepłe interfejsy i&nbsp;czytelne komunikaty pomagają szybciej porządkować informacje zaraz po przebudzeniu.
+          </p>
+          <p class="mt-2 text-xs text-neutral-400 tracking-wide">New Scientist</p>
         </article>
       </section>
 
       <!-- Footer -->
-      <hr class="border-black mt-10 mb-4" />
-      <footer class="text-xs text-neutral-400">
-        ☕ Kawka Dnia — 2026
+      <footer>
+        <div class="masthead-rule"></div>
+        <div class="masthead-rule-thin"></div>
+        <div class="flex items-center justify-between mt-5">
+          <span class="text-xs text-neutral-400 tracking-wide uppercase font-sans">Kawka Dnia — 2026</span>
+          <span class="text-xs text-neutral-400">☕</span>
+        </div>
       </footer>
 
     </div>
