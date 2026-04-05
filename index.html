@@ -24,32 +24,116 @@
               headline: ['"Playfair Display"', 'Georgia', 'serif'],
               body: ['"Libre Baskerville"', 'Georgia', 'serif'],
               label: ['"EB Garamond"', 'Georgia', 'serif']
-            },
-            maxWidth: {
-              broadsheet: '58rem'
-            },
-            colors: {
-              ink: '#0a0a0a',
-              paper: '#ffffff',
-              rule: '#000000',
-              'rule-light': '#b0b0b0',
-              'text-body': '#1a1a1a',
-              'text-secondary': '#404040',
-              'text-muted': '#6b6b6b'
             }
           }
         }
       };
     </script>
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
       body {
         background: #fff;
         color: #0a0a0a;
+        overflow-x: hidden;
       }
       a { text-decoration: none; color: inherit; }
       a:hover { text-decoration: underline; }
 
-      /* Oxford double rule — thick on top, thin below */
+      /* Scroll snap container */
+      .snap-container {
+        height: 100vh;
+        overflow-y: auto;
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+      }
+
+      /* Each panel snaps */
+      .panel {
+        min-height: 100vh;
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+      }
+
+      /* Tab navigation */
+      .tab-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #fff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .tab-nav.scrolled {
+        box-shadow: 0 1px 0 #000;
+      }
+      .tab-btn {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0.75rem 1.25rem;
+        position: relative;
+        color: #999;
+        transition: color 0.25s ease;
+        cursor: pointer;
+        background: none;
+        border: none;
+      }
+      .tab-btn:hover {
+        color: #0a0a0a;
+      }
+      .tab-btn.active {
+        color: #0a0a0a;
+      }
+      .tab-btn.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 1.25rem;
+        right: 1.25rem;
+        height: 2px;
+        background: #0a0a0a;
+      }
+
+      /* Side progress dots */
+      .progress-dots {
+        position: fixed;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 90;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .progress-dot {
+        width: 8px;
+        height: 8px;
+        border: 1.5px solid #999;
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .progress-dot.active {
+        background: #0a0a0a;
+        border-color: #0a0a0a;
+        transform: scale(1.3);
+      }
+
+      /* Framed panel inner */
+      .panel-frame {
+        border: 2px solid #0a0a0a;
+        position: relative;
+      }
+
+      /* Oxford double rule */
       .rule-oxford {
         border: none;
         border-top: 3px solid #000;
@@ -63,59 +147,73 @@
         margin-top: 3px;
       }
 
-      /* Single thick rule */
       .rule-heavy {
         border: none;
         border-top: 2px solid #000;
       }
-
-      /* Hairline rule */
       .rule-hair {
         border: none;
-        border-top: 1px solid #b0b0b0;
+        border-top: 1px solid #ccc;
       }
-
-      /* Thin black rule */
       .rule-thin {
         border: none;
         border-top: 1px solid #000;
       }
 
-      /* Section rule — medium weight */
-      .rule-section {
-        border: none;
-        border-top: 1.5px solid #000;
+      /* Big nameplate */
+      .nameplate {
+        font-size: clamp(3.5rem, 10vw, 7rem);
+        line-height: 0.9;
+        letter-spacing: 0.04em;
       }
 
-      /* Featured headline sizing */
-      .featured-headline {
-        font-size: clamp(1.85rem, 4.5vw, 3rem);
-        line-height: 1.08;
-        letter-spacing: -0.015em;
+      /* Featured headline */
+      .featured-hl {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+
+      /* Section headline */
+      .section-hl {
+        font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+
+      /* Section number */
+      .section-num {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: clamp(5rem, 12vw, 10rem);
+        line-height: 1;
+        color: #f0f0f0;
+        position: absolute;
+        font-weight: 900;
+        user-select: none;
+        pointer-events: none;
       }
 
       /* Drop cap */
       .drop-cap::first-letter {
         font-family: 'Playfair Display', Georgia, serif;
         float: left;
-        font-size: 3.8em;
-        line-height: 0.75;
-        padding-right: 0.08em;
-        padding-top: 0.06em;
+        font-size: 4.2em;
+        line-height: 0.72;
+        padding-right: 0.1em;
+        padding-top: 0.05em;
         font-weight: 900;
         color: #0a0a0a;
       }
 
-      /* Section label — small caps style */
-      .section-label {
-        font-family: 'EB Garamond', Georgia, serif;
-        font-size: 0.8rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        font-weight: 600;
+      /* Ornament */
+      .ornament {
+        text-align: center;
+        font-size: 0.6rem;
+        letter-spacing: 0.8em;
+        color: #999;
       }
 
-      /* Dateline style */
+      /* Dateline */
       .dateline {
         font-family: 'EB Garamond', Georgia, serif;
         font-size: 0.78rem;
@@ -127,240 +225,415 @@
         font-family: 'EB Garamond', Georgia, serif;
         font-size: 0.78rem;
         letter-spacing: 0.04em;
-        color: #6b6b6b;
+        color: #999;
         text-transform: uppercase;
       }
 
-      /* Centered ornament between articles */
-      .ornament {
-        text-align: center;
-        font-size: 0.65rem;
-        letter-spacing: 0.6em;
-        color: #6b6b6b;
-      }
-
-      /* Nameplate */
-      .nameplate {
-        font-size: clamp(2.8rem, 7vw, 4.5rem);
-        line-height: 1;
-        letter-spacing: 0.06em;
+      /* Section label */
+      .section-label {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-weight: 600;
       }
 
       /* Motto */
       .motto {
         font-family: 'EB Garamond', Georgia, serif;
         font-style: italic;
-        font-size: 0.85rem;
+        font-size: 1rem;
         letter-spacing: 0.04em;
-        color: #404040;
+        color: #666;
+      }
+
+      /* Article card within grid */
+      .article-card {
+        padding: 1.5rem 0;
+      }
+      .article-card + .article-card {
+        border-top: 1px solid #e0e0e0;
+      }
+
+      /* Scroll indicator arrow */
+      .scroll-arrow {
+        animation: bounce-down 2s ease infinite;
+      }
+      @keyframes bounce-down {
+        0%, 100% { transform: translateY(0); opacity: 0.6; }
+        50% { transform: translateY(6px); opacity: 1; }
+      }
+
+      /* Fade in on scroll */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 640px) {
+        .progress-dots { display: none; }
+        .panel { min-height: 100svh; }
+        .tab-btn { font-size: 0.7rem; letter-spacing: 0.12em; padding: 0.6rem 0.6rem; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        * { transition-duration: 0.01ms !important; }
+        html { scroll-behavior: auto; }
+        .snap-container { scroll-snap-type: none; scroll-behavior: auto; }
+        .fade-up { opacity: 1; transform: none; transition: none; }
+        .scroll-arrow { animation: none; }
       }
       @media print {
-        .no-print { display: none !important; }
+        .tab-nav, .progress-dots, .scroll-arrow { display: none !important; }
+        .panel { min-height: auto; page-break-after: always; }
+        .snap-container { height: auto; overflow: visible; scroll-snap-type: none; }
       }
     </style>
   </head>
-  <body class="font-body text-ink antialiased">
-    <div class="w-[92%] sm:w-[85%] lg:w-[72%] max-w-broadsheet mx-auto pt-6 sm:pt-10 pb-10 sm:pb-16">
+  <body class="font-body antialiased">
 
-      <!-- ============ MASTHEAD ============ -->
-      <header class="mb-8 sm:mb-12">
-        <!-- Top Oxford rule -->
-        <div class="rule-oxford" role="presentation"></div>
-
-        <!-- Volume / Edition line -->
-        <div class="flex items-center justify-between mt-4 mb-1">
-          <span class="dateline">Rok I &middot; Nr&nbsp;94</span>
-          <span class="dateline hidden sm:inline">Cena: bezp&#322;atnie</span>
+    <!-- ===== TAB NAVIGATION ===== -->
+    <nav class="tab-nav" id="tabNav">
+      <div class="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-8">
+        <span class="font-nameplate text-sm tracking-widest font-bold hidden sm:block" style="letter-spacing:0.12em">KAWKA DNIA</span>
+        <div class="flex items-center mx-auto sm:mx-0">
+          <button class="tab-btn active" data-target="hero">Wydanie</button>
+          <button class="tab-btn" data-target="polska">Polska</button>
+          <button class="tab-btn" data-target="swiat">&#346;wiat</button>
+          <button class="tab-btn" data-target="nauka">Nauka</button>
         </div>
+      </div>
+      <div class="rule-thin"></div>
+    </nav>
 
-        <!-- Nameplate -->
-        <div class="text-center py-4 sm:py-6">
-          <h1 class="font-nameplate nameplate font-black">
-            Kawka Dnia
-          </h1>
-          <p class="motto mt-2">Poranna dawka news&oacute;w do porannej kawy</p>
-        </div>
-
-        <!-- Dateline bar -->
-        <div class="rule-thin" role="presentation"></div>
-        <div class="flex items-center justify-between mt-2 mb-2">
-          <time class="dateline">Sobota, 4 kwietnia 2026&nbsp;r.</time>
-          <span class="dateline hidden sm:inline">Warszawa</span>
-        </div>
-        <div class="rule-heavy" role="presentation"></div>
-      </header>
-
-      <!-- ============ FEATURED / LEAD STORY ============ -->
-      <article class="mb-10 sm:mb-14">
-        <a href="https://kawkadnia.pl" class="group cursor-pointer block">
-          <h2 class="font-headline font-black featured-headline">
-            Polska sie&#263; kawiarni rusza z&nbsp;programem &#8222;kubek za&nbsp;news&#8221; &#8212; poranny briefing trafia do&nbsp;klient&oacute;w przy pierwszym zam&oacute;wieniu
-          </h2>
-        </a>
-        <div class="rule-hair mt-4 mb-4" role="presentation"></div>
-        <p class="text-base sm:text-lg leading-relaxed text-text-body max-w-[62ch] drop-cap">
-          Pilota&#380; &#322;&#261;czy kr&oacute;tk&#261; pras&oacute;wk&#281; z&nbsp;codziennym rytua&#322;em picia kawy. Klienci dostaj&#261; trzy najwa&#380;niejsze wiadomo&#347;ci dnia wraz z&nbsp;kr&oacute;tkim komentarzem redakcyjnym i&nbsp;linkami do &#378;r&oacute;de&#322;. Format przypomina klasyczny skr&oacute;t prasowy, kt&oacute;ry mo&#380;na przeczyta&#263; w&nbsp;czasie jednego espresso.
-        </p>
-        <p class="byline mt-3">Puls Biznesu</p>
-      </article>
-
-      <div class="rule-oxford mb-10 sm:mb-14" role="presentation"></div>
-
-      <!-- ============ POLSKA ============ -->
-      <section class="mb-10 sm:mb-14">
-        <div class="rule-section" role="presentation"></div>
-        <h2 class="section-label mt-3 mb-6">Polska</h2>
-
-        <article class="mb-8">
-          <a href="https://tvn24.pl" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Warszawa testuje inteligentne przystanki z&nbsp;ekranami jako&#347;ci powietrza
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            Nowe przystanki maj&#261; pokazywa&#263; op&oacute;&#378;nienia, alerty miejskie i&nbsp;lokalne pomiary smogu. Miasto chce po&#322;&#261;czy&#263; funkcjonalno&#347;&#263; z&nbsp;prost&#261;, czyteln&#261; informacj&#261; dla pasa&#380;er&oacute;w.
-          </p>
-          <p class="byline mt-2">TVN24</p>
-        </article>
-
-        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
-
-        <article class="mb-8">
-          <a href="https://businessinsider.com.pl" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Polskie startupy klimatyczne przyci&#261;gn&#281;&#322;y rekordowy kapita&#322; w&nbsp;pierwszym kwartale
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            Inwestorzy coraz ch&#281;tniej stawiaj&#261; na rozwi&#261;zania zwi&#261;zane z&nbsp;energi&#261;, logistyk&#261; i&nbsp;retencj&#261; wody. Eksperci m&oacute;wi&#261; o&nbsp;przej&#347;ciu od eksperymentu do realnego wzrostu.
-          </p>
-          <p class="byline mt-2">Business Insider</p>
-        </article>
-
-        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
-
-        <article>
-          <a href="https://wyborcza.pl" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Szko&#322;y w&nbsp;Krakowie sprawdzaj&#261; kr&oacute;tsze podsumowania lekcji generowane przez AI
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            Nauczyciele maj&#261; dostawa&#263; streszczenia lekcji i&nbsp;list&#281; zada&#324; domowych w&nbsp;bardziej uporz&#261;dkowanej formie. Pilota&#380; ma ograniczy&#263; chaos informacyjny po zaj&#281;ciach.
-          </p>
-          <p class="byline mt-2">Wyborcza</p>
-        </article>
-      </section>
-
-      <div class="rule-oxford mb-10 sm:mb-14" role="presentation"></div>
-
-      <!-- ============ ŚWIAT ============ -->
-      <section class="mb-10 sm:mb-14">
-        <div class="rule-section" role="presentation"></div>
-        <h2 class="section-label mt-3 mb-6">&#346;wiat</h2>
-
-        <article class="mb-8">
-          <a href="https://www.reuters.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Lizbona wprowadza ciche strefy pracy w&nbsp;najpopularniejszych kawiarniach
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            W&#322;adze miasta chc&#261; wesprze&#263; freelancer&oacute;w i&nbsp;turyst&oacute;w pracuj&#261;cych zdalnie. Program &#322;&#261;czy lokalne biznesy z&nbsp;miejskim standardem dost&#281;pno&#347;ci Wi&#8209;Fi i&nbsp;ergonomii.
-          </p>
-          <p class="byline mt-2">Reuters</p>
-        </article>
-
-        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
-
-        <article class="mb-8">
-          <a href="https://www.ft.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Nowy raport OECD pokazuje, &#380;e mikro-formaty newsowe rosn&#261; szybciej ni&#380; newslettery
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            Czytelnicy chc&#261; kr&oacute;tszych form, ale nadal oczekuj&#261; wiarygodnych &#378;r&oacute;de&#322;. Najlepiej radz&#261; sobie produkty &#322;&#261;cz&#261;ce selekcj&#281; tre&#347;ci z&nbsp;czyteln&#261; warstw&#261; wizualn&#261;.
-          </p>
-          <p class="byline mt-2">Financial Times</p>
-        </article>
-
-        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
-
-        <article>
-          <a href="https://www.bbc.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Tokio testuje poranny indeks skupienia dla pracownik&oacute;w biurowych
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            Firmy dostaj&#261; rekomendacje, kiedy planowa&#263; spotkania i&nbsp;prac&#281; g&#322;&#281;bok&#261;. System bazuje na ruchu miejskim, jako&#347;ci snu i&nbsp;anonimowych danych z&nbsp;urz&#261;dze&#324; wearable.
-          </p>
-          <p class="byline mt-2">BBC</p>
-        </article>
-      </section>
-
-      <div class="rule-oxford mb-10 sm:mb-14" role="presentation"></div>
-
-      <!-- ============ NAUKA ============ -->
-      <section class="mb-10 sm:mb-14">
-        <div class="rule-section" role="presentation"></div>
-        <h2 class="section-label mt-3 mb-6">Nauka</h2>
-
-        <article class="mb-8">
-          <a href="https://www.nature.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Europejskie laboratoria tworz&#261; map&#281; d&#378;wi&#281;k&oacute;w miast pomagaj&#261;c&#261; projektowa&#263; spokojniejsze osiedla
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            Badacze analizuj&#261;, jak poranne bod&#378;ce wp&#322;ywaj&#261; na stres i&nbsp;koncentracj&#281;. Wyniki maj&#261; wspiera&#263; urbanist&oacute;w w&nbsp;tworzeniu bardziej &#8222;&#322;agodnych&#8221; przestrzeni do &#380;ycia.
-          </p>
-          <p class="byline mt-2">Nature</p>
-        </article>
-
-        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
-
-        <article class="mb-8">
-          <a href="https://www.science.org" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Nowy model AI skraca analizy medyczne, ale lekarze nadal zostaj&#261; w&nbsp;centrum decyzji
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            Zespo&#322;y badawcze pokazuj&#261;, &#380;e automatyczne podsumowania zwi&#281;kszaj&#261; tempo pracy, je&#347;li interfejs jest prosty, zaufany i&nbsp;nie ukrywa &#378;r&oacute;d&#322;a informacji.
-          </p>
-          <p class="byline mt-2">Science</p>
-        </article>
-
-        <div class="ornament my-6" role="presentation" aria-hidden="true">&#8212;&#8212;&#8212;</div>
-
-        <article>
-          <a href="https://www.newscientist.com" target="_blank" rel="noreferrer" class="group cursor-pointer block">
-            <h3 class="font-headline text-xl sm:text-2xl font-bold leading-snug">
-              Badacze z&nbsp;Kopenhagi mierz&#261; wp&#322;yw &#347;wiat&#322;a dziennego na tempo podejmowania decyzji
-            </h3>
-          </a>
-          <p class="mt-3 text-base leading-relaxed text-text-secondary max-w-[60ch]">
-            Wst&#281;pne wyniki sugeruj&#261;, &#380;e &#322;agodne, ciep&#322;e interfejsy i&nbsp;czytelne komunikaty pomagaj&#261; szybciej porz&#261;dkowa&#263; informacje zaraz po przebudzeniu.
-          </p>
-          <p class="byline mt-2">New Scientist</p>
-        </article>
-      </section>
-
-      <!-- ============ FOOTER / COLOPHON ============ -->
-      <footer>
-        <div class="rule-oxford" role="presentation"></div>
-        <div class="flex items-center justify-between mt-4">
-          <span class="dateline uppercase">Kawka Dnia &mdash; 2026</span>
-          <span class="dateline italic">Redakcja poranna</span>
-        </div>
-      </footer>
-
+    <!-- ===== PROGRESS DOTS ===== -->
+    <div class="progress-dots" id="progressDots">
+      <div class="progress-dot active" data-target="hero"></div>
+      <div class="progress-dot" data-target="polska"></div>
+      <div class="progress-dot" data-target="swiat"></div>
+      <div class="progress-dot" data-target="nauka"></div>
     </div>
+
+    <!-- ===== SCROLL CONTAINER ===== -->
+    <main class="snap-container" id="scrollContainer">
+
+      <!-- ==================== PANEL 1 — HERO / MASTHEAD ==================== -->
+      <section class="panel" id="hero">
+        <div class="w-[88%] sm:w-[78%] lg:w-[64%] max-w-4xl mx-auto">
+          <div class="panel-frame p-8 sm:p-12 lg:p-16">
+
+            <!-- Top ornamental line -->
+            <div class="rule-oxford mb-8"></div>
+
+            <!-- Volume line -->
+            <div class="flex items-center justify-between mb-2">
+              <span class="dateline">Rok I &middot; Nr&nbsp;94</span>
+              <span class="dateline hidden sm:inline">Warszawa</span>
+            </div>
+
+            <!-- Nameplate -->
+            <div class="text-center py-8 sm:py-12">
+              <h1 class="font-nameplate nameplate font-black">
+                Kawka Dnia
+              </h1>
+              <p class="motto mt-4">Poranna dawka news&oacute;w do porannej kawy</p>
+            </div>
+
+            <!-- Date bar -->
+            <div class="rule-thin mb-3"></div>
+            <div class="flex items-center justify-between mb-6">
+              <time class="dateline">Niedziela, 5 kwietnia 2026&nbsp;r.</time>
+              <span class="dateline hidden sm:inline">Cena: bezp&#322;atnie</span>
+            </div>
+            <div class="rule-heavy mb-8"></div>
+
+            <!-- Featured headline -->
+            <article class="fade-up">
+              <h2 class="font-headline font-black featured-hl">
+                Polska sie&#263; kawiarni rusza z&nbsp;programem &#8222;kubek za&nbsp;news&#8221;
+              </h2>
+              <div class="rule-hair mt-5 mb-5"></div>
+              <p class="text-base sm:text-lg leading-relaxed max-w-[56ch] drop-cap" style="color:#1a1a1a">
+                Pilota&#380; &#322;&#261;czy kr&oacute;tk&#261; pras&oacute;wk&#281; z&nbsp;codziennym rytua&#322;em picia kawy. Klienci dostaj&#261; trzy najwa&#380;niejsze wiadomo&#347;ci dnia wraz z&nbsp;kr&oacute;tkim komentarzem redakcyjnym i&nbsp;linkami do &#378;r&oacute;de&#322;.
+              </p>
+              <p class="byline mt-4">Puls Biznesu</p>
+            </article>
+
+            <div class="rule-oxford mt-8"></div>
+          </div>
+
+          <!-- Scroll hint -->
+          <div class="text-center mt-8 scroll-arrow">
+            <span class="dateline" style="color:#bbb">&#8595;</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PANEL 2 — POLSKA ==================== -->
+      <section class="panel" id="polska">
+        <div class="w-[88%] sm:w-[78%] lg:w-[64%] max-w-4xl mx-auto relative">
+          <span class="section-num top-0 left-0 -translate-x-4 -translate-y-8 sm:-translate-x-12" aria-hidden="true">02</span>
+          <div class="panel-frame p-8 sm:p-12 lg:p-16">
+            <div class="rule-heavy mb-3"></div>
+            <h2 class="section-label mb-8">Polska</h2>
+
+            <div class="fade-up">
+              <!-- Lead story -->
+              <article class="mb-8">
+                <h3 class="font-headline font-black section-hl">
+                  Warszawa testuje inteligentne przystanki z&nbsp;ekranami jako&#347;ci powietrza
+                </h3>
+                <div class="rule-hair mt-4 mb-4"></div>
+                <p class="text-base leading-relaxed max-w-[54ch] drop-cap" style="color:#1a1a1a">
+                  Nowe przystanki maj&#261; pokazywa&#263; op&oacute;&#378;nienia, alerty miejskie i&nbsp;lokalne pomiary smogu. Miasto chce po&#322;&#261;czy&#263; funkcjonalno&#347;&#263; z&nbsp;prost&#261;, czyteln&#261; informacj&#261; dla pasa&#380;er&oacute;w.
+                </p>
+                <p class="byline mt-3">TVN24</p>
+              </article>
+
+              <div class="ornament my-6" aria-hidden="true">&#9670;</div>
+
+              <!-- Secondary stories in two columns on desktop -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-8">
+                <article class="article-card">
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Polskie startupy klimatyczne przyci&#261;gn&#281;&#322;y rekordowy kapita&#322;
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Inwestorzy coraz ch&#281;tniej stawiaj&#261; na rozwi&#261;zania zwi&#261;zane z&nbsp;energi&#261;, logistyk&#261; i&nbsp;retencj&#261; wody.
+                  </p>
+                  <p class="byline mt-2">Business Insider</p>
+                </article>
+                <article class="article-card">
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Szko&#322;y w&nbsp;Krakowie testuj&#261; podsumowania lekcji generowane przez AI
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Nauczyciele maj&#261; dostawa&#263; streszczenia lekcji i&nbsp;list&#281; zada&#324; domowych w&nbsp;bardziej uporz&#261;dkowanej formie.
+                  </p>
+                  <p class="byline mt-2">Wyborcza</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="rule-heavy mt-6"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PANEL 3 — ŚWIAT ==================== -->
+      <section class="panel" id="swiat">
+        <div class="w-[88%] sm:w-[78%] lg:w-[64%] max-w-4xl mx-auto relative">
+          <span class="section-num top-0 right-0 translate-x-4 -translate-y-8 sm:translate-x-12" aria-hidden="true">03</span>
+          <div class="panel-frame p-8 sm:p-12 lg:p-16">
+            <div class="rule-heavy mb-3"></div>
+            <h2 class="section-label mb-8">&#346;wiat</h2>
+
+            <div class="fade-up">
+              <!-- Lead story -->
+              <article class="mb-8">
+                <h3 class="font-headline font-black section-hl">
+                  Lizbona wprowadza ciche strefy pracy w&nbsp;najpopularniejszych kawiarniach
+                </h3>
+                <div class="rule-hair mt-4 mb-4"></div>
+                <p class="text-base leading-relaxed max-w-[54ch] drop-cap" style="color:#1a1a1a">
+                  W&#322;adze miasta chc&#261; wesprze&#263; freelancer&oacute;w i&nbsp;turyst&oacute;w pracuj&#261;cych zdalnie. Program &#322;&#261;czy lokalne biznesy z&nbsp;miejskim standardem dost&#281;pno&#347;ci Wi&#8209;Fi i&nbsp;ergonomii.
+                </p>
+                <p class="byline mt-3">Reuters</p>
+              </article>
+
+              <div class="ornament my-6" aria-hidden="true">&#9670;</div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-8">
+                <article class="article-card">
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Mikro-formaty newsowe rosn&#261; szybciej ni&#380; newslettery
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Czytelnicy chc&#261; kr&oacute;tszych form, ale nadal oczekuj&#261; wiarygodnych &#378;r&oacute;de&#322;.
+                  </p>
+                  <p class="byline mt-2">Financial Times</p>
+                </article>
+                <article class="article-card">
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Tokio testuje poranny indeks skupienia dla pracownik&oacute;w biurowych
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Firmy dostaj&#261; rekomendacje, kiedy planowa&#263; spotkania i&nbsp;prac&#281; g&#322;&#281;bok&#261;.
+                  </p>
+                  <p class="byline mt-2">BBC</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="rule-heavy mt-6"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PANEL 4 — NAUKA ==================== -->
+      <section class="panel" id="nauka">
+        <div class="w-[88%] sm:w-[78%] lg:w-[64%] max-w-4xl mx-auto relative">
+          <span class="section-num bottom-0 left-0 -translate-x-4 translate-y-8 sm:-translate-x-12" aria-hidden="true">04</span>
+          <div class="panel-frame p-8 sm:p-12 lg:p-16">
+            <div class="rule-heavy mb-3"></div>
+            <h2 class="section-label mb-8">Nauka</h2>
+
+            <div class="fade-up">
+              <!-- Lead story -->
+              <article class="mb-8">
+                <h3 class="font-headline font-black section-hl">
+                  Europejskie laboratoria tworz&#261; map&#281; d&#378;wi&#281;k&oacute;w miast
+                </h3>
+                <div class="rule-hair mt-4 mb-4"></div>
+                <p class="text-base leading-relaxed max-w-[54ch] drop-cap" style="color:#1a1a1a">
+                  Badacze analizuj&#261;, jak poranne bod&#378;ce wp&#322;ywaj&#261; na stres i&nbsp;koncentracj&#281;. Wyniki maj&#261; wspiera&#263; urbanist&oacute;w w&nbsp;tworzeniu bardziej &#8222;&#322;agodnych&#8221; przestrzeni do &#380;ycia.
+                </p>
+                <p class="byline mt-3">Nature</p>
+              </article>
+
+              <div class="ornament my-6" aria-hidden="true">&#9670;</div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-8">
+                <article class="article-card">
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Nowy model AI skraca analizy medyczne
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Automatyczne podsumowania zwi&#281;kszaj&#261; tempo pracy, je&#347;li interfejs jest prosty i&nbsp;zaufany.
+                  </p>
+                  <p class="byline mt-2">Science</p>
+                </article>
+                <article class="article-card">
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Wp&#322;yw &#347;wiat&#322;a dziennego na tempo podejmowania decyzji
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    &#321;agodne interfejsy i&nbsp;czytelne komunikaty pomagaj&#261; szybciej porz&#261;dkowa&#263; informacje po przebudzeniu.
+                  </p>
+                  <p class="byline mt-2">New Scientist</p>
+                </article>
+              </div>
+            </div>
+
+            <!-- Footer / Colophon -->
+            <div class="rule-oxford mt-8"></div>
+            <div class="flex items-center justify-between mt-4">
+              <span class="dateline uppercase">Kawka Dnia &mdash; 2026</span>
+              <span class="dateline italic">Redakcja poranna</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+      (function() {
+        const container = document.getElementById('scrollContainer');
+        const tabs = document.querySelectorAll('.tab-btn');
+        const dots = document.querySelectorAll('.progress-dot');
+        const panels = document.querySelectorAll('.panel');
+        const nav = document.getElementById('tabNav');
+        const sectionIds = ['hero', 'polska', 'swiat', 'nauka'];
+
+        // Click handlers for tabs and dots
+        function scrollToSection(id) {
+          const el = document.getElementById(id);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        tabs.forEach(btn => {
+          btn.addEventListener('click', () => scrollToSection(btn.dataset.target));
+        });
+        dots.forEach(dot => {
+          dot.addEventListener('click', () => scrollToSection(dot.dataset.target));
+        });
+
+        // Update active state on scroll
+        let ticking = false;
+        container.addEventListener('scroll', () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              updateActiveSection();
+              updateFadeElements();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+
+        function updateActiveSection() {
+          const scrollTop = container.scrollTop;
+          const viewHeight = container.clientHeight;
+          let activeIdx = 0;
+
+          panels.forEach((panel, i) => {
+            const top = panel.offsetTop;
+            if (scrollTop >= top - viewHeight * 0.4) {
+              activeIdx = i;
+            }
+          });
+
+          tabs.forEach((btn, i) => {
+            btn.classList.toggle('active', i === activeIdx);
+          });
+          dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === activeIdx);
+          });
+
+          // Nav shadow
+          nav.classList.toggle('scrolled', scrollTop > 20);
+        }
+
+        // Fade-up elements on scroll
+        function updateFadeElements() {
+          const viewHeight = container.clientHeight;
+          const scrollTop = container.scrollTop;
+          document.querySelectorAll('.fade-up').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            // Since container is the scroll parent, use offset relative to viewport
+            if (rect.top < viewHeight * 0.85) {
+              el.classList.add('visible');
+            }
+          });
+        }
+
+        // Initial check
+        updateActiveSection();
+        updateFadeElements();
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            const current = getCurrentIndex();
+            if (current < sectionIds.length - 1) {
+              e.preventDefault();
+              scrollToSection(sectionIds[current + 1]);
+            }
+          } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            const current = getCurrentIndex();
+            if (current > 0) {
+              e.preventDefault();
+              scrollToSection(sectionIds[current - 1]);
+            }
+          }
+        });
+
+        function getCurrentIndex() {
+          const scrollTop = container.scrollTop;
+          const viewHeight = container.clientHeight;
+          let idx = 0;
+          panels.forEach((panel, i) => {
+            if (scrollTop >= panel.offsetTop - viewHeight * 0.4) idx = i;
+          });
+          return idx;
+        }
+      })();
+    </script>
   </body>
 </html>
