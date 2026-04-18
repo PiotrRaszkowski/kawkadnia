@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kawka Dnia — poranna dawka newsów</title>
+    <meta
+      name="description"
+      content="Kawka Dnia — czytelny poranny przegląd najważniejszych wiadomości."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              nameplate: ['"Playfair Display SC"', 'Georgia', 'serif'],
+              headline: ['"Playfair Display"', 'Georgia', 'serif'],
+              body: ['"Libre Baskerville"', 'Georgia', 'serif'],
+              label: ['"EB Garamond"', 'Georgia', 'serif']
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 3.5rem;
+      }
+      body {
+        background: #fff;
+        color: #0a0a0a;
+      }
+      a { text-decoration: none; color: inherit; }
+      a:hover { text-decoration: underline; }
+
+      /* Sticky nav */
+      .site-nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #fff;
+        transition: box-shadow 0.3s ease;
+      }
+      .site-nav.scrolled {
+        box-shadow: 0 1px 0 #000;
+      }
+      .nav-link {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0.75rem 1.25rem;
+        position: relative;
+        color: #999;
+        transition: color 0.25s ease;
+      }
+      .nav-link:hover, .nav-link.active {
+        color: #0a0a0a;
+        text-decoration: none;
+      }
+      .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 1.25rem;
+        right: 1.25rem;
+        height: 2px;
+        background: #0a0a0a;
+      }
+
+      /* Oxford double rule */
+      .rule-oxford {
+        border: none;
+        border-top: 3px solid #000;
+        padding-bottom: 3px;
+        background: transparent;
+      }
+      .rule-oxford::after {
+        content: '';
+        display: block;
+        border-top: 1px solid #000;
+        margin-top: 3px;
+      }
+      .rule-heavy { border: none; border-top: 2px solid #000; }
+      .rule-hair  { border: none; border-top: 1px solid #ccc; }
+      .rule-thin  { border: none; border-top: 1px solid #000; }
+
+      /* Framed panel */
+      .panel-frame {
+        border: 2px solid #0a0a0a;
+      }
+
+      /* Typography scales */
+      .nameplate {
+        font-size: clamp(3.5rem, 10vw, 7rem);
+        line-height: 0.9;
+        letter-spacing: 0.04em;
+      }
+      .featured-hl {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+      .section-hl {
+        font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+
+      /* Drop cap */
+      .drop-cap::first-letter {
+        font-family: 'Playfair Display', Georgia, serif;
+        float: left;
+        font-size: 4.2em;
+        line-height: 0.72;
+        padding-right: 0.1em;
+        padding-top: 0.05em;
+        font-weight: 900;
+        color: #0a0a0a;
+      }
+
+      /* Labels & meta */
+      .dateline {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+      }
+      .byline {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        color: #999;
+        text-transform: uppercase;
+      }
+      .section-label {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .motto {
+        font-family: 'EB Garamond', Georgia, serif;
+        font-style: italic;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+        color: #666;
+      }
+
+      /* News item in list */
+      .news-item {
+        padding: 1.25rem 0;
+      }
+      .news-item + .news-item {
+        border-top: 1px solid #e0e0e0;
+      }
+      .news-item .item-num {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 1.5rem;
+        line-height: 1;
+        color: #ccc;
+        min-width: 2rem;
+        flex-shrink: 0;
+      }
+
+      /* Ornament */
+      .ornament {
+        text-align: center;
+        font-size: 0.6rem;
+        letter-spacing: 0.8em;
+        color: #999;
+      }
+
+      /* Scroll arrow */
+      .scroll-arrow {
+        animation: bounce-down 2s ease infinite;
+      }
+      @keyframes bounce-down {
+        0%, 100% { transform: translateY(0); opacity: 0.6; }
+        50% { transform: translateY(6px); opacity: 1; }
+      }
+
+      /* Fade in */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 640px) {
+        .nav-link { font-size: 0.7rem; letter-spacing: 0.12em; padding: 0.6rem 0.5rem; }
+        html { scroll-padding-top: 3rem; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        .fade-up { opacity: 1; transform: none; transition: none; }
+        .scroll-arrow { animation: none; }
+      }
+      @media print {
+        .site-nav, .scroll-arrow { display: none !important; }
+      }
+    </style>
+  </head>
+  <body class="font-body antialiased">
+
+    <!-- ===== STICKY NAVIGATION ===== -->
+    <nav class="site-nav" id="siteNav">
+      <div class="max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-8">
+        <a href="#hero" class="font-nameplate text-sm tracking-widest font-bold hidden sm:block" style="letter-spacing:0.12em">KAWKA DNIA</a>
+        <div class="flex items-center mx-auto sm:mx-0">
+          <a href="#hero" class="nav-link active" data-section="hero">Wydanie</a>
+          <a href="#polska" class="nav-link" data-section="polska">Polska</a>
+          <a href="#swiat" class="nav-link" data-section="swiat">&#346;wiat</a>
+          <a href="#nauka" class="nav-link" data-section="nauka">Nauka</a>
+        </div>
+      </div>
+      <div class="rule-thin"></div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+
+      <!-- ==================== HERO / MASTHEAD ==================== -->
+      <section id="hero" class="min-h-screen flex flex-col justify-center py-16 sm:py-24">
+        <div class="w-[90%] sm:w-[80%] lg:w-[66%] max-w-4xl mx-auto">
+          <div class="panel-frame p-8 sm:p-12 lg:p-16">
+
+            <div class="rule-oxford mb-8"></div>
+
+            <div class="flex items-center justify-between mb-2">
+              <span class="dateline">Rok I &middot; Nr&nbsp;94</span>
+              <span class="dateline hidden sm:inline">Warszawa</span>
+            </div>
+
+            <div class="text-center py-8 sm:py-12">
+              <h1 class="font-nameplate nameplate font-black">Kawka Dnia</h1>
+              <p class="motto mt-4">Poranna dawka news&oacute;w do porannej kawy</p>
+            </div>
+
+            <div class="rule-thin mb-3"></div>
+            <div class="flex items-center justify-between mb-6">
+              <time class="dateline">Niedziela, 5 kwietnia 2026&nbsp;r.</time>
+              <span class="dateline hidden sm:inline">Cena: bezp&#322;atnie</span>
+            </div>
+            <div class="rule-heavy mb-8"></div>
+
+            <article class="fade-up">
+              <h2 class="font-headline font-black featured-hl">
+                Polska sie&#263; kawiarni rusza z&nbsp;programem &#8222;kubek za&nbsp;news&#8221;
+              </h2>
+              <div class="rule-hair mt-5 mb-5"></div>
+              <p class="text-base sm:text-lg leading-relaxed max-w-[56ch] drop-cap" style="color:#1a1a1a">
+                Pilota&#380; &#322;&#261;czy kr&oacute;tk&#261; pras&oacute;wk&#281; z&nbsp;codziennym rytua&#322;em picia kawy. Klienci dostaj&#261; trzy najwa&#380;niejsze wiadomo&#347;ci dnia wraz z&nbsp;kr&oacute;tkim komentarzem redakcyjnym i&nbsp;linkami do &#378;r&oacute;de&#322;.
+              </p>
+              <p class="byline mt-4">Puls Biznesu</p>
+            </article>
+
+            <div class="rule-oxford mt-8"></div>
+          </div>
+
+          <div class="text-center mt-8 scroll-arrow">
+            <span class="dateline" style="color:#bbb">&#8595;</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== POLSKA ==================== -->
+      <section id="polska" class="py-16 sm:py-24">
+        <div class="w-[90%] sm:w-[80%] lg:w-[66%] max-w-4xl mx-auto">
+          <div class="panel-frame p-8 sm:p-12 lg:p-16">
+            <div class="rule-heavy mb-3"></div>
+            <h2 class="section-label mb-8">Polska</h2>
+
+            <!-- Lead story -->
+            <article class="mb-8 fade-up">
+              <h3 class="font-headline font-black section-hl">
+                Warszawa testuje inteligentne przystanki z&nbsp;ekranami jako&#347;ci powietrza
+              </h3>
+              <div class="rule-hair mt-4 mb-4"></div>
+              <p class="text-base leading-relaxed max-w-[54ch] drop-cap" style="color:#1a1a1a">
+                Nowe przystanki maj&#261; pokazywa&#263; op&oacute;&#378;nienia, alerty miejskie i&nbsp;lokalne pomiary smogu. Miasto chce po&#322;&#261;czy&#263; funkcjonalno&#347;&#263; z&nbsp;prost&#261;, czyteln&#261; informacj&#261; dla pasa&#380;er&oacute;w.
+              </p>
+              <p class="byline mt-3">TVN24</p>
+            </article>
+
+            <div class="ornament my-6" aria-hidden="true">&#9670;</div>
+
+            <!-- News list -->
+            <div class="fade-up">
+              <div class="news-item flex gap-4">
+                <span class="item-num">2</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Polskie startupy klimatyczne przyci&#261;gn&#281;&#322;y rekordowy kapita&#322;
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Inwestorzy coraz ch&#281;tniej stawiaj&#261; na rozwi&#261;zania zwi&#261;zane z&nbsp;energi&#261;, logistyk&#261; i&nbsp;retencj&#261; wody.
+                  </p>
+                  <p class="byline mt-2">Business Insider</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">3</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Szko&#322;y w&nbsp;Krakowie testuj&#261; podsumowania lekcji generowane przez AI
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Nauczyciele maj&#261; dostawa&#263; streszczenia lekcji i&nbsp;list&#281; zada&#324; domowych w&nbsp;bardziej uporz&#261;dkowanej formie.
+                  </p>
+                  <p class="byline mt-2">Wyborcza</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">4</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Nowa linia kolejowa po&#322;&#261;czy &#321;&oacute;d&#378; z&nbsp;Wroc&#322;awiem w&nbsp;dwie godziny
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    CPK potwierdzi&#322; harmonogram budowy odcinka, kt&oacute;ry ma skr&oacute;ci&#263; podr&oacute;&#380; o&nbsp;ponad po&#322;ow&#281;.
+                  </p>
+                  <p class="byline mt-2">Rzeczpospolita</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">5</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Gda&#324;sk otwiera publiczne warsztaty naprawy elektroniki
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Miejski program „Napraw, nie wyrzucaj" startuje w&nbsp;pi&#281;ciu dzielnicach z&nbsp;darmowym dost&#281;pem do narz&#281;dzi.
+                  </p>
+                  <p class="byline mt-2">Trójmiasto.pl</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">6</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Rolnicy z&nbsp;Podlasia przeszli na uprawy pionowe w&nbsp;kontenerach
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Eksperymentalny program przynosi zaskakuj&#261;ce wyniki — zbiory sa&#322;aty wzros&#322;y trzykrotnie.
+                  </p>
+                  <p class="byline mt-2">Gazeta Wyborcza</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">7</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Wroc&#322;aw wprowadza stref&#281; ograniczonego ruchu w&nbsp;centrum
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Od pa&#378;dziernika samochody spalinowe nie wjad&#261; na Rynek i&nbsp;okoliczne ulice.
+                  </p>
+                  <p class="byline mt-2">TVN24</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">8</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Biblioteki w&nbsp;ca&#322;ej Polsce udost&#281;pniaj&#261; czytniki e-book&oacute;w
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Program Ministerstwa Kultury obejmie 400 plac&oacute;wek do ko&#324;ca roku.
+                  </p>
+                  <p class="byline mt-2">PAP</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">9</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Pozna&#324; testuje autobusy wodorowe na trzech liniach
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Pierwsze wyniki pokazuj&#261; ni&#380;sze koszty eksploatacji ni&#380; w&nbsp;przypadku autobus&oacute;w elektrycznych.
+                  </p>
+                  <p class="byline mt-2">Onet</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">10</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Polski satelita obserwacyjny wejdzie na orbit&#281; w&nbsp;2027
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Konsorcjum firm kosmicznych podpisa&#322;o umow&#281; z&nbsp;ESA na wsp&oacute;lny program monitoringu.
+                  </p>
+                  <p class="byline mt-2">Polsat News</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="rule-heavy mt-8"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== ŚWIAT ==================== -->
+      <section id="swiat" class="py-16 sm:py-24">
+        <div class="w-[90%] sm:w-[80%] lg:w-[66%] max-w-4xl mx-auto">
+          <div class="panel-frame p-8 sm:p-12 lg:p-16">
+            <div class="rule-heavy mb-3"></div>
+            <h2 class="section-label mb-8">&#346;wiat</h2>
+
+            <!-- Lead story -->
+            <article class="mb-8 fade-up">
+              <h3 class="font-headline font-black section-hl">
+                Lizbona wprowadza ciche strefy pracy w&nbsp;najpopularniejszych kawiarniach
+              </h3>
+              <div class="rule-hair mt-4 mb-4"></div>
+              <p class="text-base leading-relaxed max-w-[54ch] drop-cap" style="color:#1a1a1a">
+                W&#322;adze miasta chc&#261; wesprze&#263; freelancer&oacute;w i&nbsp;turyst&oacute;w pracuj&#261;cych zdalnie. Program &#322;&#261;czy lokalne biznesy z&nbsp;miejskim standardem dost&#281;pno&#347;ci Wi&#8209;Fi i&nbsp;ergonomii.
+              </p>
+              <p class="byline mt-3">Reuters</p>
+            </article>
+
+            <div class="ornament my-6" aria-hidden="true">&#9670;</div>
+
+            <!-- News list -->
+            <div class="fade-up">
+              <div class="news-item flex gap-4">
+                <span class="item-num">2</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Mikro-formaty newsowe rosn&#261; szybciej ni&#380; newslettery
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Czytelnicy chc&#261; kr&oacute;tszych form, ale nadal oczekuj&#261; wiarygodnych &#378;r&oacute;de&#322;.
+                  </p>
+                  <p class="byline mt-2">Financial Times</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">3</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Tokio testuje poranny indeks skupienia dla pracownik&oacute;w biurowych
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Firmy dostaj&#261; rekomendacje, kiedy planowa&#263; spotkania i&nbsp;prac&#281; g&#322;&#281;bok&#261;.
+                  </p>
+                  <p class="byline mt-2">BBC</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">4</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Berlin zbuduje 200&nbsp;km nowych dr&oacute;g rowerowych do 2028
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Koalicja rz&#261;dz&#261;ca zatwierdziła bud&#380;et na infrastruktur&#281; rowerow&#261; o&nbsp;warto&#347;ci 1,2 mld euro.
+                  </p>
+                  <p class="byline mt-2">Der Spiegel</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">5</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Indie uruchamiaj&#261; krajowy system wczesnego ostrzegania przed powodzi&#261;
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    System oparty na AI ma ostrzega&#263; mieszka&#324;c&oacute;w z&nbsp;48-godzinnym wyprzedzeniem.
+                  </p>
+                  <p class="byline mt-2">Al Jazeera</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">6</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Kanada zakazuje jednorazowych opakowa&#324; w&nbsp;gastronomii
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Zakaz obejmie restauracje, kawiarnie i&nbsp;food trucki od stycznia 2027.
+                  </p>
+                  <p class="byline mt-2">The Guardian</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">7</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Nowy Jork otwiera pierwszy publiczny park na dachu wie&#380;owca
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Projekt na Manhattanie ma pokaza&#263;, jak zmienia&#263; niewykorzystan&#261; przestrze&#324; miejsk&#261;.
+                  </p>
+                  <p class="byline mt-2">The New York Times</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">8</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Francja wprowadza „prawo do ciszy" w&nbsp;przestrzeniach publicznych
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Nowa ustawa ograniczy ha&#322;as reklamowy i&nbsp;muzyczny w&nbsp;centrach miast.
+                  </p>
+                  <p class="byline mt-2">Le Monde</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">9</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Australia inwestuje w&nbsp;odsalanie wody na skal&#281; przemys&#322;ow&#261;
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Nowe zak&#322;ady maj&#261; zabezpieczy&#263; dostawy wody dla 5 milion&oacute;w mieszka&#324;c&oacute;w.
+                  </p>
+                  <p class="byline mt-2">ABC News</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">10</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Szwecja testuje 6-godzinny dzie&#324; pracy w&nbsp;sektorze publicznym
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Wst&#281;pne dane wskazuj&#261; na wzrost produktywno&#347;ci i&nbsp;spadek zwolnie&#324; lekarskich.
+                  </p>
+                  <p class="byline mt-2">Bloomberg</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="rule-heavy mt-8"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== NAUKA ==================== -->
+      <section id="nauka" class="py-16 sm:py-24">
+        <div class="w-[90%] sm:w-[80%] lg:w-[66%] max-w-4xl mx-auto">
+          <div class="panel-frame p-8 sm:p-12 lg:p-16">
+            <div class="rule-heavy mb-3"></div>
+            <h2 class="section-label mb-8">Nauka</h2>
+
+            <!-- Lead story -->
+            <article class="mb-8 fade-up">
+              <h3 class="font-headline font-black section-hl">
+                Europejskie laboratoria tworz&#261; map&#281; d&#378;wi&#281;k&oacute;w miast
+              </h3>
+              <div class="rule-hair mt-4 mb-4"></div>
+              <p class="text-base leading-relaxed max-w-[54ch] drop-cap" style="color:#1a1a1a">
+                Badacze analizuj&#261;, jak poranne bod&#378;ce wp&#322;ywaj&#261; na stres i&nbsp;koncentracj&#281;. Wyniki maj&#261; wspiera&#263; urbanist&oacute;w w&nbsp;tworzeniu bardziej &#8222;&#322;agodnych&#8221; przestrzeni do &#380;ycia.
+              </p>
+              <p class="byline mt-3">Nature</p>
+            </article>
+
+            <div class="ornament my-6" aria-hidden="true">&#9670;</div>
+
+            <!-- News list -->
+            <div class="fade-up">
+              <div class="news-item flex gap-4">
+                <span class="item-num">2</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Nowy model AI skraca analizy medyczne
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Automatyczne podsumowania zwi&#281;kszaj&#261; tempo pracy, je&#347;li interfejs jest prosty i&nbsp;zaufany.
+                  </p>
+                  <p class="byline mt-2">Science</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">3</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Wp&#322;yw &#347;wiat&#322;a dziennego na tempo podejmowania decyzji
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    &#321;agodne interfejsy i&nbsp;czytelne komunikaty pomagaj&#261; szybciej porz&#261;dkowa&#263; informacje po przebudzeniu.
+                  </p>
+                  <p class="byline mt-2">New Scientist</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">4</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Odkryto now&#261; klas&#281; antybiotyk&oacute;w w&nbsp;glebie arktycznej
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Zwi&#261;zki dzia&#322;aj&#261; na bakterie oporne na dotychczasowe leki — badania wchodz&#261; w&nbsp;faz&#281; kliniczn&#261;.
+                  </p>
+                  <p class="byline mt-2">The Lancet</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">5</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Teleskop Webba sfotografowa&#322; najstarsz&#261; znan&#261; galaktyk&#281;
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Obiekt powsta&#322; zaledwie 290 milion&oacute;w lat po Wielkim Wybuchu.
+                  </p>
+                  <p class="byline mt-2">NASA</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">6</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Naukowcy wyhodowali tkank&#281; serca z&nbsp;kom&oacute;rek macierzystych
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Prze&#322;om mo&#380;e otworzy&#263; drog&#281; do regeneracji uszkodzonego mi&#281;&#347;nia sercowego bez przeszczepu.
+                  </p>
+                  <p class="byline mt-2">Cell</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">7</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Sztuczna inteligencja przewiduje erupcje wulkan&oacute;w z&nbsp;tygodniowym wyprzedzeniem
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Model trenowany na danych sejsmicznych z&nbsp;50 lat osi&#261;ga 87% trafno&#347;ci.
+                  </p>
+                  <p class="byline mt-2">Science Advances</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">8</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Pierwsze udane testy fuzji j&#261;drowej w&nbsp;skali komercyjnej
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Eksperyment utrzyma&#322; plazm&#281; przez 12 minut — rekord pozwalaj&#261;cy my&#347;le&#263; o&nbsp;elektrowni.
+                  </p>
+                  <p class="byline mt-2">MIT Technology Review</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">9</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Pszczo&#322;y miejskie produkuj&#261; mi&oacute;d o&nbsp;wy&#380;szej jako&#347;ci ni&#380; wiejskie
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Badanie obejmuj&#261;ce 12 europejskich miast zaskakuje pszczelarzy i&nbsp;ekolog&oacute;w.
+                  </p>
+                  <p class="byline mt-2">PLOS ONE</p>
+                </div>
+              </div>
+              <div class="news-item flex gap-4">
+                <span class="item-num">10</span>
+                <div>
+                  <h4 class="font-headline font-bold text-lg sm:text-xl leading-snug">
+                    Opracowano plastik rozk&#322;adaj&#261;cy si&#281; w&nbsp;wodzie morskiej w&nbsp;30 dni
+                  </h4>
+                  <p class="mt-2 text-sm leading-relaxed" style="color:#404040">
+                    Materia&#322; na bazie alg zachowuje wytrzyma&#322;o&#347;&#263; tradycyjnego opakowania.
+                  </p>
+                  <p class="byline mt-2">Nature Materials</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="rule-heavy mt-8"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== FOOTER ==================== -->
+      <footer class="py-12 sm:py-16">
+        <div class="w-[90%] sm:w-[80%] lg:w-[66%] max-w-4xl mx-auto">
+          <div class="rule-oxford mb-6"></div>
+          <div class="flex items-center justify-between">
+            <span class="dateline uppercase">Kawka Dnia &mdash; 2026</span>
+            <span class="dateline italic">Redakcja poranna</span>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+      (function() {
+        const nav = document.getElementById('siteNav');
+        const links = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section[id]');
+
+        // Update active nav link based on scroll position
+        function updateActiveLink() {
+          const scrollTop = window.scrollY;
+          let activeId = 'hero';
+
+          sections.forEach(section => {
+            const top = section.offsetTop - 80;
+            if (scrollTop >= top) {
+              activeId = section.id;
+            }
+          });
+
+          links.forEach(link => {
+            link.classList.toggle('active', link.dataset.section === activeId);
+          });
+
+          nav.classList.toggle('scrolled', scrollTop > 20);
+        }
+
+        // Fade-up on scroll
+        function updateFadeElements() {
+          const viewHeight = window.innerHeight;
+          document.querySelectorAll('.fade-up:not(.visible)').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < viewHeight * 0.88) {
+              el.classList.add('visible');
+            }
+          });
+        }
+
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              updateActiveLink();
+              updateFadeElements();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+
+        // Initial
+        updateActiveLink();
+        updateFadeElements();
+      })();
+    </script>
+  </body>
+</html>
